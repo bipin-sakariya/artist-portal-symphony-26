@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -21,7 +20,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Globe, Save, ChevronDown, ChevronUp, Image, Music, Calendar, PlusCircle, X, Tag } from "lucide-react";
+import { ChevronLeft, Globe, Save, ChevronDown, ChevronUp, Image, Music, Calendar, PlusCircle, X, Tag, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Define event types
 const eventTypes = [
@@ -89,6 +89,14 @@ interface PricingEntry {
   price: number;
 }
 
+// New interface for the more intuitive pricing model
+interface PricingMatrix {
+  default: number;
+  eventTypes: Record<string, number>;
+  countries: Record<string, number>;
+  specific: Record<string, Record<string, number>>;
+}
+
 interface ArtistTags {
   id: string;
   name: string;
@@ -101,11 +109,24 @@ const EditArtist = () => {
   const navigate = useNavigate();
   const [artist, setArtist] = useState<Artist | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pricing, setPricing] = useState<PricingEntry[]>([]);
   const [tags, setTags] = useState<ArtistTags[]>([]);
   const [newTag, setNewTag] = useState({ name: "", nameAr: "" });
   const [activeTab, setActiveTab] = useState("basic");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  
+  // New pricing state
+  const [pricingMatrix, setPricingMatrix] = useState<PricingMatrix>({
+    default: 0,
+    eventTypes: {},
+    countries: {},
+    specific: {}
+  });
+  
+  // State for new price entry
+  const [newPriceType, setNewPriceType] = useState<"eventType" | "country" | "specific">("eventType");
+  const [newEventType, setNewEventType] = useState<string>("");
+  const [newCountry, setNewCountry] = useState<string>("");
+  const [newPrice, setNewPrice] = useState<number>(0);
 
   // Initialize the form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -145,39 +166,55 @@ const EditArtist = () => {
       if (foundArtist) {
         setArtist(foundArtist);
         
-        // Set form default values
-        form.reset({
-          name: foundArtist.name,
-          nameAr: foundArtist.nameAr,
-          genre: foundArtist.genre,
-          genreAr: foundArtist.genreAr,
-          location: foundArtist.location,
-          locationAr: foundArtist.locationAr,
-          bio: foundArtist.bio || "",
-          bioAr: foundArtist.bioAr || "",
-          isVerified: foundArtist.isVerified,
-          isPromoted: foundArtist.isPromoted,
-          isInternational: foundArtist.isInternational,
-          approvalStatus: foundArtist.approvalStatus,
-          profileImage: foundArtist.profileImage,
-          coverImage: foundArtist.coverImage,
-          minimumBid: foundArtist.minimumBid,
-          currency: foundArtist.currency,
+        // Add socialLinks to the found artist if it doesn't exist
+        const artistWithSocialLinks = {
+          ...foundArtist,
           socialLinks: foundArtist.socialLinks || {
             instagram: "",
             twitter: "",
             facebook: "",
             website: "",
-          },
+          }
+        };
+        
+        // Set form default values
+        form.reset({
+          name: artistWithSocialLinks.name,
+          nameAr: artistWithSocialLinks.nameAr,
+          genre: artistWithSocialLinks.genre,
+          genreAr: artistWithSocialLinks.genreAr,
+          location: artistWithSocialLinks.location,
+          locationAr: artistWithSocialLinks.locationAr,
+          bio: artistWithSocialLinks.bio || "",
+          bioAr: artistWithSocialLinks.bioAr || "",
+          isVerified: artistWithSocialLinks.isVerified,
+          isPromoted: artistWithSocialLinks.isPromoted,
+          isInternational: artistWithSocialLinks.isInternational,
+          approvalStatus: artistWithSocialLinks.approvalStatus,
+          profileImage: artistWithSocialLinks.profileImage,
+          coverImage: artistWithSocialLinks.coverImage,
+          minimumBid: artistWithSocialLinks.minimumBid,
+          currency: artistWithSocialLinks.currency,
+          socialLinks: artistWithSocialLinks.socialLinks,
         });
         
-        // Initialize sample pricing data
-        // In a real app, this would come from the API
-        setPricing([
-          { eventType: "wedding", country: "sa", price: foundArtist.minimumBid * 1.5 },
-          { eventType: "corporate", country: "sa", price: foundArtist.minimumBid * 1.2 },
-          { eventType: "private", country: "ae", price: foundArtist.minimumBid * 2 },
-        ]);
+        // Initialize sample pricing matrix
+        setPricingMatrix({
+          default: artistWithSocialLinks.minimumBid,
+          eventTypes: {
+            wedding: artistWithSocialLinks.minimumBid * 1.5,
+            corporate: artistWithSocialLinks.minimumBid * 1.2,
+          },
+          countries: {
+            ae: artistWithSocialLinks.minimumBid * 1.3,
+            sa: artistWithSocialLinks.minimumBid * 1.0,
+          },
+          specific: {
+            wedding: {
+              ae: artistWithSocialLinks.minimumBid * 2.0
+            }
+          }
+        });
         
         // Initialize sample tags
         setTags([
@@ -202,52 +239,106 @@ const EditArtist = () => {
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     // In a real app, this would be an API call
     console.log("Form values:", values);
-    console.log("Pricing data:", pricing);
+    console.log("Pricing matrix:", pricingMatrix);
     console.log("Tags:", tags);
     
     toast.success(t("Artist information updated successfully", "تم تحديث معلومات الفنان بنجاح"));
   };
 
-  const addPricingEntry = () => {
-    // Find first eventType and country that doesn't have a pricing entry
-    const availableEventTypes = eventTypes.map(et => et.id);
-    const availableCountries = countries.map(c => c.id);
-    
-    // Find combination that doesn't exist yet
-    let newEventType = availableEventTypes[0];
-    let newCountry = availableCountries[0];
-    let found = false;
-    
-    for (const et of availableEventTypes) {
-      for (const c of availableCountries) {
-        if (!pricing.some(p => p.eventType === et && p.country === c)) {
-          newEventType = et;
-          newCountry = c;
-          found = true;
-          break;
-        }
-      }
-      if (found) break;
+  // Function to get the effective price for a combination of event type and country
+  const getEffectivePrice = (eventType: string, country: string): number => {
+    // Check if there's a specific price for this combination
+    if (pricingMatrix.specific[eventType]?.[country]) {
+      return pricingMatrix.specific[eventType][country];
     }
     
-    setPricing([...pricing, { 
-      eventType: newEventType, 
-      country: newCountry, 
-      price: artist?.minimumBid || 0 
-    }]);
+    // Check if there's a price for this event type
+    if (pricingMatrix.eventTypes[eventType]) {
+      return pricingMatrix.eventTypes[eventType];
+    }
+    
+    // Check if there's a price for this country
+    if (pricingMatrix.countries[country]) {
+      return pricingMatrix.countries[country];
+    }
+    
+    // Fall back to default price
+    return pricingMatrix.default;
   };
 
-  const removePricingEntry = (index: number) => {
-    setPricing(pricing.filter((_, i) => i !== index));
+  // Add a new price rule
+  const addPriceRule = () => {
+    if (newPriceType === "eventType" && newEventType) {
+      setPricingMatrix({
+        ...pricingMatrix,
+        eventTypes: {
+          ...pricingMatrix.eventTypes,
+          [newEventType]: newPrice
+        }
+      });
+    } else if (newPriceType === "country" && newCountry) {
+      setPricingMatrix({
+        ...pricingMatrix,
+        countries: {
+          ...pricingMatrix.countries,
+          [newCountry]: newPrice
+        }
+      });
+    } else if (newPriceType === "specific" && newEventType && newCountry) {
+      const updatedSpecific = { ...pricingMatrix.specific };
+      if (!updatedSpecific[newEventType]) {
+        updatedSpecific[newEventType] = {};
+      }
+      updatedSpecific[newEventType][newCountry] = newPrice;
+      
+      setPricingMatrix({
+        ...pricingMatrix,
+        specific: updatedSpecific
+      });
+    }
+    
+    // Reset form
+    setNewPrice(0);
+    setNewEventType("");
+    setNewCountry("");
   };
 
-  const updatePricingEntry = (index: number, field: keyof PricingEntry, value: string | number) => {
-    const updatedPricing = [...pricing];
-    updatedPricing[index] = { 
-      ...updatedPricing[index], 
-      [field]: field === 'price' ? Number(value) : value 
-    };
-    setPricing(updatedPricing);
+  // Remove a price rule
+  const removePriceRule = (type: "eventType" | "country" | "specific", eventType?: string, country?: string) => {
+    if (type === "eventType" && eventType) {
+      const { [eventType]: removed, ...restEventTypes } = pricingMatrix.eventTypes;
+      setPricingMatrix({
+        ...pricingMatrix,
+        eventTypes: restEventTypes
+      });
+    } else if (type === "country" && country) {
+      const { [country]: removed, ...restCountries } = pricingMatrix.countries;
+      setPricingMatrix({
+        ...pricingMatrix,
+        countries: restCountries
+      });
+    } else if (type === "specific" && eventType && country) {
+      const updatedSpecific = { ...pricingMatrix.specific };
+      if (updatedSpecific[eventType]) {
+        const { [country]: removed, ...restCountries } = updatedSpecific[eventType];
+        
+        if (Object.keys(restCountries).length === 0) {
+          // If no countries left, remove the event type entry
+          const { [eventType]: removed, ...restEventTypes } = updatedSpecific;
+          setPricingMatrix({
+            ...pricingMatrix,
+            specific: restEventTypes
+          });
+        } else {
+          // Otherwise update the countries for this event type
+          updatedSpecific[eventType] = restCountries;
+          setPricingMatrix({
+            ...pricingMatrix,
+            specific: updatedSpecific
+          });
+        }
+      }
+    }
   };
 
   const addTag = () => {
@@ -769,326 +860,3 @@ const EditArtist = () => {
                                   className="rounded-lg border-2 border-dashed border-muted-foreground/25 aspect-square flex flex-col items-center justify-center"
                                 >
                                   <Image className="h-8 w-8 text-muted-foreground" />
-                                  <p className="mt-1 text-xs text-muted-foreground">
-                                    {t("Add Media", "إضافة وسائط")}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </TabsContent>
-                    
-                    {/* Pricing Tab */}
-                    <TabsContent value="pricing" className="space-y-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>{t("Basic Pricing", "التسعير الأساسي")}</CardTitle>
-                          <CardDescription>
-                            {t("Set the artist's base price and currency", "تعيين السعر الأساسي والعملة للفنان")}
-                          </CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <FormField
-                              control={form.control}
-                              name="minimumBid"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{t("Minimum Bid", "الحد الأدنى للسعر")}</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      type="number" 
-                                      min="0" 
-                                      {...field}
-                                      onChange={e => field.onChange(Number(e.target.value))} 
-                                    />
-                                  </FormControl>
-                                  <FormDescription>
-                                    {t("The minimum amount that can be paid for this artist", "الحد الأدنى للمبلغ الذي يمكن دفعه لهذا الفنان")}
-                                  </FormDescription>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="currency"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{t("Currency", "العملة")}</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder={t("Select currency", "اختر العملة")} />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      <SelectItem value="SAR">SAR - Saudi Riyal</SelectItem>
-                                      <SelectItem value="AED">AED - UAE Dirham</SelectItem>
-                                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>{t("Advanced Pricing", "التسعير المتقدم")}</CardTitle>
-                          <CardDescription>
-                            {t("Set pricing for different event types and countries", "تعيين الأسعار لأنواع الفعاليات والبلدان المختلفة")}
-                          </CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-6">
-                          <div className="space-y-4">
-                            {pricing.map((entry, index) => (
-                              <div key={index} className="grid grid-cols-12 gap-4 items-center bg-muted/50 p-3 rounded-md">
-                                <div className="col-span-4">
-                                  <label className="text-xs text-muted-foreground mb-1 block">
-                                    {t("Event Type", "نوع الفعالية")}
-                                  </label>
-                                  <Select
-                                    value={entry.eventType}
-                                    onValueChange={(value) => updatePricingEntry(index, 'eventType', value)}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {eventTypes.map((type) => (
-                                        <SelectItem key={type.id} value={type.id}>
-                                          {language === "ar" ? type.labelAr : type.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                
-                                <div className="col-span-4">
-                                  <label className="text-xs text-muted-foreground mb-1 block">
-                                    {t("Country", "البلد")}
-                                  </label>
-                                  <Select
-                                    value={entry.country}
-                                    onValueChange={(value) => updatePricingEntry(index, 'country', value)}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {countries.map((country) => (
-                                        <SelectItem key={country.id} value={country.id}>
-                                          {language === "ar" ? country.labelAr : country.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                
-                                <div className="col-span-3">
-                                  <label className="text-xs text-muted-foreground mb-1 block">
-                                    {t("Price", "السعر")}
-                                  </label>
-                                  <div className="relative">
-                                    <Input
-                                      type="number"
-                                      min="0"
-                                      value={entry.price}
-                                      onChange={(e) => updatePricingEntry(index, 'price', e.target.value)}
-                                    />
-                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                                      {form.watch('currency')}
-                                    </span>
-                                  </div>
-                                </div>
-                                
-                                <div className="col-span-1 flex items-end justify-end h-full">
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => removePricingEntry(index)}
-                                    className="h-9 w-9 text-destructive/70 hover:text-destructive hover:bg-destructive/10"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                            
-                            <Button 
-                              type="button" 
-                              variant="outline" 
-                              onClick={addPricingEntry}
-                              className="mt-2 w-full"
-                            >
-                              <PlusCircle className="h-4 w-4 mr-2" />
-                              {t("Add Pricing Rule", "إضافة قاعدة تسعير")}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </TabsContent>
-                    
-                    {/* Settings Tab */}
-                    <TabsContent value="settings" className="space-y-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>{t("Artist Status", "حالة الفنان")}</CardTitle>
-                          <CardDescription>
-                            {t("Set the artist's approval status and visibility", "تعيين حالة موافقة الفنان والرؤية")}
-                          </CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-6">
-                          <FormField
-                            control={form.control}
-                            name="approvalStatus"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t("Approval Status", "حالة الموافقة")}</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder={t("Select status", "اختر الحالة")} />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="approved">{t("Approved", "معتمد")}</SelectItem>
-                                    <SelectItem value="pending">{t("Pending", "قيد الانتظار")}</SelectItem>
-                                    <SelectItem value="rejected">{t("Rejected", "مرفوض")}</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormDescription>
-                                  {t("Only approved artists are visible to customers", "فقط الفنانين المعتمدين مرئيين للعملاء")}
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <div className="space-y-4">
-                            <FormField
-                              control={form.control}
-                              name="isVerified"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md shadow-sm">
-                                  <div className="space-y-0.5">
-                                    <FormLabel>{t("Verified Artist", "فنان موثق")}</FormLabel>
-                                    <FormDescription>
-                                      {t("Mark this artist as verified with a badge", "وضع علامة لهذا الفنان كموثق بشارة")}
-                                    </FormDescription>
-                                  </div>
-                                  <FormControl>
-                                    <Switch
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="isPromoted"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md shadow-sm">
-                                  <div className="space-y-0.5">
-                                    <FormLabel>{t("Featured Artist", "فنان مميز")}</FormLabel>
-                                    <FormDescription>
-                                      {t("Promote this artist on the platform", "الترويج لهذا الفنان على المنصة")}
-                                    </FormDescription>
-                                  </div>
-                                  <FormControl>
-                                    <Switch
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="isInternational"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md shadow-sm">
-                                  <div className="space-y-0.5">
-                                    <FormLabel>{t("International Artist", "فنان دولي")}</FormLabel>
-                                    <FormDescription>
-                                      {t("This artist is available for international bookings", "هذا الفنان متاح للحجوزات الدولية")}
-                                    </FormDescription>
-                                  </div>
-                                  <FormControl>
-                                    <Switch
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          <Collapsible className="mt-6 border rounded-md">
-                            <CollapsibleTrigger className="flex w-full items-center justify-between p-4">
-                              <div className="flex items-center">
-                                <span className="font-medium">{t("Danger Zone", "منطقة الخطر")}</span>
-                              </div>
-                              <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="px-4 pb-4">
-                              <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4">
-                                <h4 className="text-sm font-medium text-destructive mb-2">
-                                  {t("Delete Artist", "حذف الفنان")}
-                                </h4>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                  {t("Once deleted, this artist and all associated data will be permanently removed from the platform.", "بمجرد الحذف، سيتم إزالة هذا الفنان وجميع البيانات المرتبطة به بشكل دائم من المنصة.")}
-                                </p>
-                                <Button type="button" variant="destructive" size="sm">
-                                  {t("Delete Artist", "حذف الفنان")}
-                                </Button>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-                        </CardContent>
-                      </Card>
-                    </TabsContent>
-                  </Tabs>
-                  
-                  <div className="flex justify-end gap-4 mt-8">
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => navigate('/artists')}
-                    >
-                      {t("Cancel", "إلغاء")}
-                    </Button>
-                    <Button type="submit">
-                      <Save className="h-4 w-4 mr-2" />
-                      {t("Save Changes", "حفظ التغييرات")}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </Form>
-          </main>
-        </PageTransition>
-      </div>
-    </div>
-  );
-};
-
-export default EditArtist;
