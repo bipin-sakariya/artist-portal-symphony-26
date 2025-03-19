@@ -224,7 +224,12 @@ const Analytics = () => {
                         dataKey="name" 
                         tickLine={false}
                         axisLine={{ stroke: 'hsl(var(--border))' }}
-                        tick={{ fill: 'hsl(var(--muted-foreground))', angle: -45, textAnchor: 'end', dy: 20 }}
+                        tick={{ 
+                          fill: 'hsl(var(--muted-foreground))',
+                          textAnchor: 'end',
+                          dy: 20,
+                          transform: 'rotate(-45)' 
+                        }}
                       />
                       <YAxis 
                         yAxisId="left"
