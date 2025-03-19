@@ -114,7 +114,8 @@ export default {
 				'float': 'float 3s ease-in-out infinite',
 			},
 			fontFamily: {
-				sans: ['SF Pro Display', 'Inter', 'sans-serif'],
+				sans: ['Plus Jakarta Sans', 'SF Pro Display', 'Inter', 'sans-serif'],
+				display: ['Outfit', 'SF Pro Display', 'sans-serif'],
 			},
 			boxShadow: {
 				'subtle': '0 1px 2px rgba(0, 0, 0, 0.04)',
