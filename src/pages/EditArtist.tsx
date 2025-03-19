@@ -860,3 +860,496 @@ const EditArtist = () => {
                                   className="rounded-lg border-2 border-dashed border-muted-foreground/25 aspect-square flex flex-col items-center justify-center"
                                 >
                                   <Image className="h-8 w-8 text-muted-foreground" />
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    {t("Add media", "إضافة وسائط")}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    {/* Pricing Tab */}
+                    <TabsContent value="pricing" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Pricing Configuration", "تكوين التسعير")}</CardTitle>
+                          <CardDescription>
+                            {t("Set default price and rules for different event types and countries", "تعيين السعر الافتراضي والقواعد لأنواع الأحداث والبلدان المختلفة")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="space-y-6">
+                            <div>
+                              <h3 className="text-sm font-medium mb-2">
+                                {t("Default Price", "السعر الافتراضي")}
+                              </h3>
+                              <div className="flex items-end gap-4">
+                                <div className="flex-1 max-w-xs">
+                                  <FormField
+                                    control={form.control}
+                                    name="minimumBid"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>{t("Minimum Bid", "الحد الأدنى للعرض")}</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            type="number" 
+                                            {...field}
+                                            onChange={(e) => {
+                                              field.onChange(Number(e.target.value));
+                                              setPricingMatrix({
+                                                ...pricingMatrix,
+                                                default: Number(e.target.value)
+                                              });
+                                            }}
+                                          />
+                                        </FormControl>
+                                        <FormDescription>
+                                          {t("Base price for all events", "السعر الأساسي لجميع الفعاليات")}
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                                
+                                <div className="w-32">
+                                  <FormField
+                                    control={form.control}
+                                    name="currency"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>{t("Currency", "العملة")}</FormLabel>
+                                        <Select value={field.value} onValueChange={field.onChange}>
+                                          <FormControl>
+                                            <SelectTrigger>
+                                              <SelectValue placeholder={t("Select currency", "اختر العملة")} />
+                                            </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                            <SelectItem value="SAR">SAR (﷼)</SelectItem>
+                                            <SelectItem value="AED">AED (د.إ)</SelectItem>
+                                            <SelectItem value="USD">USD ($)</SelectItem>
+                                            <SelectItem value="EUR">EUR (€)</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <h3 className="text-sm font-medium">
+                                {t("Price Rules", "قواعد التسعير")}
+                              </h3>
+                              <div className="bg-muted/50 p-4 rounded-lg">
+                                <div className="flex flex-wrap gap-4 mb-4">
+                                  <div className="flex-1 min-w-[180px]">
+                                    <label className="text-xs font-medium mb-1 block">
+                                      {t("Rule Type", "نوع القاعدة")}
+                                    </label>
+                                    <Select 
+                                      value={newPriceType} 
+                                      onValueChange={(value) => setNewPriceType(value as any)}
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="eventType">
+                                          {t("Event Type", "نوع الحدث")}
+                                        </SelectItem>
+                                        <SelectItem value="country">
+                                          {t("Country", "الدولة")}
+                                        </SelectItem>
+                                        <SelectItem value="specific">
+                                          {t("Specific Combination", "مجموعة محددة")}
+                                        </SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  
+                                  {(newPriceType === "eventType" || newPriceType === "specific") && (
+                                    <div className="flex-1 min-w-[180px]">
+                                      <label className="text-xs font-medium mb-1 block">
+                                        {t("Event Type", "نوع الحدث")}
+                                      </label>
+                                      <Select 
+                                        value={newEventType} 
+                                        onValueChange={setNewEventType}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder={t("Select event type", "اختر نوع الحدث")} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {eventTypes.map((event) => (
+                                            <SelectItem key={event.id} value={event.id}>
+                                              {language === "ar" ? event.labelAr : event.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  )}
+                                  
+                                  {(newPriceType === "country" || newPriceType === "specific") && (
+                                    <div className="flex-1 min-w-[180px]">
+                                      <label className="text-xs font-medium mb-1 block">
+                                        {t("Country", "الدولة")}
+                                      </label>
+                                      <Select 
+                                        value={newCountry} 
+                                        onValueChange={setNewCountry}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder={t("Select country", "اختر الدولة")} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {countries.map((country) => (
+                                            <SelectItem key={country.id} value={country.id}>
+                                              {language === "ar" ? country.labelAr : country.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  )}
+                                  
+                                  <div className="flex-1 min-w-[180px]">
+                                    <label className="text-xs font-medium mb-1 block">
+                                      {t("Price", "السعر")}
+                                    </label>
+                                    <div className="flex gap-2">
+                                      <Input 
+                                        type="number" 
+                                        value={newPrice}
+                                        onChange={(e) => setNewPrice(Number(e.target.value))}
+                                      />
+                                      <Button
+                                        type="button"
+                                        onClick={addPriceRule}
+                                        disabled={
+                                          (newPriceType === "eventType" && !newEventType) ||
+                                          (newPriceType === "country" && !newCountry) ||
+                                          (newPriceType === "specific" && (!newEventType || !newCountry))
+                                        }
+                                      >
+                                        {t("Add", "إضافة")}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="rounded-lg overflow-hidden border">
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead>{t("Rule Type", "نوع القاعدة")}</TableHead>
+                                      <TableHead>{t("Details", "التفاصيل")}</TableHead>
+                                      <TableHead>{t("Price", "السعر")}</TableHead>
+                                      <TableHead className="w-[80px]"></TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        <Badge variant="outline">{t("Default", "افتراضي")}</Badge>
+                                      </TableCell>
+                                      <TableCell>{t("All events, all countries", "جميع الأحداث، جميع البلدان")}</TableCell>
+                                      <TableCell>{pricingMatrix.default} {form.watch("currency")}</TableCell>
+                                      <TableCell></TableCell>
+                                    </TableRow>
+                                    
+                                    {/* Event Type Rules */}
+                                    {Object.entries(pricingMatrix.eventTypes).map(([eventId, price]) => {
+                                      const event = eventTypes.find(e => e.id === eventId);
+                                      return (
+                                        <TableRow key={`event-${eventId}`}>
+                                          <TableCell>
+                                            <Badge variant="outline" className="bg-primary/10">
+                                              {t("Event Type", "نوع الحدث")}
+                                            </Badge>
+                                          </TableCell>
+                                          <TableCell>
+                                            {event ? (language === "ar" ? event.labelAr : event.label) : eventId}
+                                          </TableCell>
+                                          <TableCell>{price} {form.watch("currency")}</TableCell>
+                                          <TableCell>
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="icon"
+                                              onClick={() => removePriceRule("eventType", eventId)}
+                                            >
+                                              <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
+                                          </TableCell>
+                                        </TableRow>
+                                      );
+                                    })}
+                                    
+                                    {/* Country Rules */}
+                                    {Object.entries(pricingMatrix.countries).map(([countryId, price]) => {
+                                      const country = countries.find(c => c.id === countryId);
+                                      return (
+                                        <TableRow key={`country-${countryId}`}>
+                                          <TableCell>
+                                            <Badge variant="outline" className="bg-secondary/10">
+                                              {t("Country", "الدولة")}
+                                            </Badge>
+                                          </TableCell>
+                                          <TableCell>
+                                            {country ? (language === "ar" ? country.labelAr : country.label) : countryId}
+                                          </TableCell>
+                                          <TableCell>{price} {form.watch("currency")}</TableCell>
+                                          <TableCell>
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="icon"
+                                              onClick={() => removePriceRule("country", undefined, countryId)}
+                                            >
+                                              <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
+                                          </TableCell>
+                                        </TableRow>
+                                      );
+                                    })}
+                                    
+                                    {/* Specific Combinations */}
+                                    {Object.entries(pricingMatrix.specific).flatMap(([eventId, countries]) => {
+                                      const event = eventTypes.find(e => e.id === eventId);
+                                      return Object.entries(countries).map(([countryId, price]) => {
+                                        const country = countries.find(c => c.id === countryId);
+                                        return (
+                                          <TableRow key={`specific-${eventId}-${countryId}`}>
+                                            <TableCell>
+                                              <Badge variant="outline" className="bg-destructive/10">
+                                                {t("Specific", "محدد")}
+                                              </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                              {event ? (language === "ar" ? event.labelAr : event.label) : eventId}
+                                              {" + "}
+                                              {country ? (language === "ar" ? country.labelAr : country.label) : countryId}
+                                            </TableCell>
+                                            <TableCell>{price} {form.watch("currency")}</TableCell>
+                                            <TableCell>
+                                              <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => removePriceRule("specific", eventId, countryId)}
+                                              >
+                                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                              </Button>
+                                            </TableCell>
+                                          </TableRow>
+                                        );
+                                      });
+                                    })}
+                                  </TableBody>
+                                </Table>
+                              </div>
+                              
+                              <div className="bg-muted/30 p-4 rounded-lg mt-4">
+                                <h4 className="text-sm font-medium mb-2">
+                                  {t("Price Matrix Preview", "معاينة مصفوفة الأسعار")}
+                                </h4>
+                                <div className="overflow-x-auto">
+                                  <Table>
+                                    <TableHeader>
+                                      <TableRow>
+                                        <TableHead></TableHead>
+                                        {countries.slice(0, 5).map((country) => (
+                                          <TableHead key={country.id}>
+                                            {language === "ar" ? country.labelAr : country.label}
+                                          </TableHead>
+                                        ))}
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {eventTypes.slice(0, 5).map((event) => (
+                                        <TableRow key={event.id}>
+                                          <TableCell className="font-medium">
+                                            {language === "ar" ? event.labelAr : event.label}
+                                          </TableCell>
+                                          {countries.slice(0, 5).map((country) => (
+                                            <TableCell key={country.id}>
+                                              {getEffectivePrice(event.id, country.id)} {form.watch("currency")}
+                                            </TableCell>
+                                          ))}
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    {/* Settings Tab */}
+                    <TabsContent value="settings" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Artist Settings", "إعدادات الفنان")}</CardTitle>
+                          <CardDescription>
+                            {t("Configure visibility, approval, and other settings", "تكوين الظهور والموافقة والإعدادات الأخرى")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="isVerified"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("Verified Artist", "فنان موثق")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("Artist's identity and credentials have been verified", "تم التحقق من هوية الفنان وأوراق اعتماده")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={form.control}
+                              name="isPromoted"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("Featured Artist", "فنان مميز")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("Promote this artist on homepage and search results", "عرض هذا الفنان في الصفحة الرئيسية ونتائج البحث")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="isInternational"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("International Artist", "فنان دولي")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("Artist is available for international bookings", "الفنان متاح للحجوزات الدولية")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={form.control}
+                              name="approvalStatus"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t("Approval Status", "حالة الموافقة")}</FormLabel>
+                                  <Select value={field.value} onValueChange={field.onChange}>
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder={t("Select status", "اختر الحالة")} />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value="approved">
+                                        {t("Approved", "تمت الموافقة")}
+                                      </SelectItem>
+                                      <SelectItem value="pending">
+                                        {t("Pending", "قيد الانتظار")}
+                                      </SelectItem>
+                                      <SelectItem value="rejected">
+                                        {t("Rejected", "مرفوض")}
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <FormDescription>
+                                    {t("Current approval status of this artist", "حالة الموافقة الحالية لهذا الفنان")}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <h3 className="text-sm font-medium">{t("Danger Zone", "منطقة الخطر")}</h3>
+                            <div className="rounded-lg border border-destructive/30 p-4">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-medium text-destructive">{t("Deactivate Artist", "إلغاء تنشيط الفنان")}</h4>
+                                  <p className="text-sm text-muted-foreground">
+                                    {t("Temporarily hide this artist from the platform", "إخفاء هذا الفنان مؤقتًا من المنصة")}
+                                  </p>
+                                </div>
+                                <Button type="button" variant="destructive" className="ml-4">
+                                  {t("Deactivate", "إلغاء التنشيط")}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
+                  
+                  <div className="flex justify-end py-4">
+                    <Button type="submit" className="flex items-center gap-2">
+                      <Save className="h-4 w-4" />
+                      {t("Save Changes", "حفظ التغييرات")}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </Form>
+          </main>
+        </PageTransition>
+      </div>
+    </div>
+  );
+};
+
+export default EditArtist;
