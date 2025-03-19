@@ -26,14 +26,14 @@ const StatCard = ({
 }: StatCardProps) => {
   return (
     <div className={cn(
-      "glass-card p-6 flex flex-col relative group overflow-hidden transition-all duration-300 hover:shadow-elevated border-0",
-      "bg-gradient-to-br from-white to-slate-50/90 dark:from-slate-900/90 dark:to-slate-950/95",
-      "backdrop-blur-lg",
+      "glass-card p-6 flex flex-col relative group overflow-hidden transition-all duration-300 hover:shadow-elevated",
+      "bg-gradient-to-br from-white/80 to-slate-50/70 dark:from-slate-900/80 dark:to-slate-800/70",
+      "backdrop-blur-md border-0 rounded-xl",
       className
     )}>
       <div className="flex justify-between items-start mb-4">
-        <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-950/70 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
-          <Icon className="h-5 w-5" />
+        <div className="h-12 w-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
+          <Icon className="h-6 w-6" />
         </div>
         <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 font-display">{title}</h3>
       </div>
@@ -69,7 +69,7 @@ const StatCard = ({
         )}
       </div>
       
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500/30 via-violet-500/40 to-fuchsia-500/30 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/30 via-violet-500/40 to-fuchsia-500/30 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
     </div>
   );
 };
