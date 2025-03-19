@@ -10,9 +10,11 @@ import { useLanguage } from "@/hooks/use-language";
 import { analyticsDashboard, artists, bookingRequests } from "@/lib/dashboard-data";
 import { Calendar, Music, TicketCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Dashboard = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     // Set document title
@@ -35,7 +37,7 @@ const Dashboard = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+            <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-3"} gap-4 mb-8`}>
               <StatCard 
                 title={t("Total Booking Requests", "إجمالي طلبات الحجز")}
                 value={analyticsDashboard.totalBookingRequests}
