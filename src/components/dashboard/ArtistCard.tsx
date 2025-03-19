@@ -4,6 +4,7 @@ import { Artist } from "@/lib/dashboard-data";
 import { CheckCircle, ChevronRight, Edit, Star, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface ArtistCardProps {
   artist: Artist;
@@ -12,6 +13,7 @@ interface ArtistCardProps {
 
 const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
   
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -35,6 +37,11 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
       default:
         return null;
     }
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/artists/edit/${artist.id}`);
   };
 
   return (
@@ -97,7 +104,10 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
             </div>
           </div>
           
-          <button className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors">
+          <button 
+            className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors"
+            onClick={handleEditClick}
+          >
             <Edit className="h-4 w-4" />
           </button>
         </div>
