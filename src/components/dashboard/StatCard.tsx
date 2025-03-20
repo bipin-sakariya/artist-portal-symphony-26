@@ -33,16 +33,16 @@ const StatCard = ({
         <h3 className="text-xs font-medium text-slate-600 dark:text-slate-300 font-display">{title}</h3>
       </div>
       
-      <div>
+      <div className="flex-1 flex flex-col justify-center items-center">
         <p className={cn(
-          "text-xl font-bold font-display tracking-tight",
+          "text-xl font-bold font-display tracking-tight text-center",
           valueClassName || "text-slate-900 dark:text-white"
         )}>
           {value}
         </p>
         
         {description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-display">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-display text-center">
             {description}
           </p>
         )}
