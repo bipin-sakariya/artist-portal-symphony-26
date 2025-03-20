@@ -12,9 +12,6 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
 } from "@/components/ui";
 
 interface BudgetFieldProps {

@@ -10,6 +10,7 @@ export {
   DropdownMenuTrigger 
 } from "./dropdown-menu";
 export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./form";
+export { HoverCard, HoverCardTrigger, HoverCardContent } from "./hover-card";
 export { Input } from "./input";
 export { Label } from "./label";
 export { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -58,4 +59,3 @@ export {
   TooltipProvider,
   TooltipTrigger
 } from "./tooltip";
-
