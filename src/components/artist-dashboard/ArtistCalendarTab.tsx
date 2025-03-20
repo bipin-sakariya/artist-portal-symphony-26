@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
@@ -35,7 +34,6 @@ const ArtistCalendarTab = () => {
   const [rangeStart, setRangeStart] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
 
-  // Function to toggle between single and range selection modes
   const toggleRangeMode = () => {
     setIsRangeMode(!isRangeMode);
     setSelectedDates([]);
@@ -43,16 +41,13 @@ const ArtistCalendarTab = () => {
     setIsSelectingRange(false);
   };
 
-  // Handle date selection based on the mode (single or range)
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (!isRangeMode || !dates) {
       setSelectedDates(dates || []);
       return;
     }
 
-    // Range mode logic
     if (!isSelectingRange) {
-      // First click - set the range start
       if (dates.length > 0) {
         const lastSelected = dates[dates.length - 1];
         setRangeStart(lastSelected);
@@ -60,15 +55,12 @@ const ArtistCalendarTab = () => {
         setIsSelectingRange(true);
       }
     } else {
-      // Second click - complete the range
       if (dates.length > 0 && rangeStart) {
         const rangeEnd = dates[dates.length - 1];
         
-        // Create array of dates in the range
         const range: Date[] = [];
         let currentDate = new Date(rangeStart);
         
-        // Ensure the range is always from earlier to later date, regardless of selection order
         const startDate = rangeStart < rangeEnd ? rangeStart : rangeEnd;
         const endDate = rangeStart < rangeEnd ? rangeEnd : rangeStart;
         
@@ -84,16 +76,12 @@ const ArtistCalendarTab = () => {
     }
   };
 
-  // Handle single date selection in range mode
   const handleSingleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // If already selecting a range
     if (isSelectingRange && rangeStart) {
-      // Create array of dates in the range
       const range: Date[] = [];
       
-      // Ensure the range is always from earlier to later date, regardless of selection order
       const startDate = rangeStart < date ? rangeStart : date;
       const endDate = rangeStart < date ? date : rangeStart;
       
@@ -107,30 +95,12 @@ const ArtistCalendarTab = () => {
       setIsSelectingRange(false);
       setRangeStart(null);
     } else {
-      // First click in range selection
       setRangeStart(date);
       setSelectedDates([date]);
       setIsSelectingRange(true);
     }
   };
 
-  // Custom modifiers for the calendar
-  const modifiers = {
-    rangeStart: rangeStart ? [rangeStart] : [],
-    isSelectingRange: isSelectingRange,
-    blocked: blockedDates
-  };
-
-  // Custom modifier styles
-  const modifiersStyles = {
-    rangeStart: {
-      color: "white",
-      backgroundColor: "var(--primary)",
-      borderRadius: "50%"
-    }
-  };
-
-  // Function to check if a date is already blocked
   const isDateBlocked = (date: Date) => {
     return blockedDates.some(blockedDate => 
       blockedDate.getFullYear() === date.getFullYear() &&
@@ -139,10 +109,8 @@ const ArtistCalendarTab = () => {
     );
   };
 
-  // Function to block selected dates
   const blockDates = () => {
     if (selectedDates.length > 0) {
-      // Filter out dates that are already blocked
       const newBlockedDates = selectedDates.filter(date => !isDateBlocked(date));
       
       if (newBlockedDates.length === 0) {
@@ -171,14 +139,12 @@ const ArtistCalendarTab = () => {
     }
   };
 
-  // Function to clear all selected dates
   const clearSelectedDates = () => {
     setSelectedDates([]);
     setRangeStart(null);
     setIsSelectingRange(false);
   };
 
-  // Function to remove a blocked date
   const removeBlockedDate = (dateToRemove: Date) => {
     setBlockedDates(prev => 
       prev.filter(date => 
@@ -197,7 +163,6 @@ const ArtistCalendarTab = () => {
     });
   };
 
-  // Function to remove all blocked dates
   const clearAllBlockedDates = () => {
     setBlockedDates([]);
     
@@ -210,7 +175,6 @@ const ArtistCalendarTab = () => {
     });
   };
 
-  // Group blocked dates by month for more compact display
   const groupedBlockedDates = blockedDates.reduce((acc, date) => {
     const monthYear = format(date, language === "ar" ? "MM/yyyy" : "MMMM yyyy");
     if (!acc[monthYear]) {
@@ -220,18 +184,26 @@ const ArtistCalendarTab = () => {
     return acc;
   }, {} as Record<string, Date[]>);
 
-  // Common calendar props
   const commonCalendarProps = {
     disabled: (date: Date) => {
-      // Disable dates that are already in the blockedDates array
       return blockedDates.some(disabledDate => 
         date.getFullYear() === disabledDate.getFullYear() &&
         date.getMonth() === disabledDate.getMonth() &&
         date.getDate() === disabledDate.getDate()
       );
     },
-    modifiers: modifiers,
-    modifiersStyles: modifiersStyles,
+    modifiers: {
+      rangeStart: rangeStart ? [rangeStart] : [],
+      isSelectingRange: isSelectingRange,
+      blocked: blockedDates
+    },
+    modifiersStyles: {
+      rangeStart: {
+        color: "white",
+        backgroundColor: "var(--primary)",
+        borderRadius: "50%"
+      }
+    },
     className: "pointer-events-auto font-gotham-book",
     numberOfMonths: window.innerWidth > 768 ? 2 : 1,
     classNames: {
@@ -333,13 +305,12 @@ const ArtistCalendarTab = () => {
                   </div>
                 </div>
                 <motion.div 
-                  className="border rounded-md p-1 bg-white shadow-subtle"
+                  className="border rounded-md p-1 bg-card dark:bg-black/90 shadow-subtle"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   {isRangeMode && isSelectingRange ? (
-                    // In range mode and selecting the second date
                     <Calendar 
                       mode="single"
                       selected={rangeStart}
@@ -347,7 +318,6 @@ const ArtistCalendarTab = () => {
                       {...commonCalendarProps}
                     />
                   ) : isRangeMode ? (
-                    // In range mode, selecting the first date
                     <Calendar 
                       mode="single"
                       selected={selectedDates[0]}
@@ -355,7 +325,6 @@ const ArtistCalendarTab = () => {
                       {...commonCalendarProps}
                     />
                   ) : (
-                    // In multiple selection mode
                     <Calendar 
                       mode="multiple"
                       selected={selectedDates}
@@ -364,6 +333,7 @@ const ArtistCalendarTab = () => {
                     />
                   )}
                 </motion.div>
+                
                 <AnimatePresence>
                   {selectedDates.length > 0 && (
                     <motion.div 

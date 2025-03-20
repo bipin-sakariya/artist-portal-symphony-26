@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
@@ -260,7 +261,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               </div>
               
               <motion.div 
-                className="border rounded-md p-1 bg-black/90 dark:bg-black shadow-subtle"
+                className="border rounded-md p-1 bg-card dark:bg-black/90 shadow-subtle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
