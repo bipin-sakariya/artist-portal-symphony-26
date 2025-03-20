@@ -1,7 +1,8 @@
+
 import { create } from 'zustand';
 import { useEffect } from 'react';
 
-type Language = 'en';
+type Language = 'en' | 'ar'; // Updated to allow both 'en' and 'ar' types
 
 interface LanguageState {
   language: Language;
