@@ -9,7 +9,7 @@ import {
   Tooltip 
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 const RevenueSourceChart = () => {
   const { t } = useLanguage();
@@ -28,34 +28,29 @@ const RevenueSourceChart = () => {
       </CardHeader>
       <CardContent>
         <div className="h-40">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={30}
-                outerRadius={60}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                <Cell fill="#3498db" />
-                <Cell fill="#e74c3c" />
-                <Cell fill="#2ecc71" />
-                <Cell fill="#f39c12" />
-              </Pie>
-              <Tooltip
-                content={<ChartTooltipContent />}
-                formatter={(value) => [`${value}%`, t("Percentage", "النسبة المئوية")]}
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  borderColor: 'hsl(var(--border))',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <ChartContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={30}
+                  outerRadius={60}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  <Cell fill="#3498db" />
+                  <Cell fill="#e74c3c" />
+                  <Cell fill="#2ecc71" />
+                  <Cell fill="#f39c12" />
+                </Pie>
+                <Tooltip
+                  content={<ChartTooltip />}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartContainer>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-2">
           <div className="flex items-center gap-1">

@@ -12,7 +12,7 @@ import {
   YAxis 
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 interface TopArtistsChartProps {
   data: {
@@ -35,68 +35,64 @@ const TopArtistsChart = ({ data }: TopArtistsChartProps) => {
       </CardHeader>
       <CardContent>
         <div className="h-96 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-              <XAxis 
-                dataKey="name" 
-                tickLine={false}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tick={{ 
-                  fill: 'hsl(var(--muted-foreground))',
-                  textAnchor: 'end',
-                  dy: 20,
-                  transform: 'rotate(-45)' 
-                }}
-              />
-              <YAxis 
-                yAxisId="left"
-                tickLine={false}
-                axisLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                stroke="hsl(var(--muted-foreground))"
-              />
-              <YAxis 
-                yAxisId="right"
-                orientation="right"
-                tickLine={false}
-                axisLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                stroke="hsl(var(--muted-foreground))"
-              />
-              <Tooltip
-                content={<ChartTooltipContent />}
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  borderColor: 'hsl(var(--border))',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-                }}
-              />
-              <Legend 
-                wrapperStyle={{ 
-                  paddingTop: 20
-                }}
-              />
-              <Bar 
-                yAxisId="left" 
-                dataKey="bookings" 
-                name={t("Bookings", "الحجوزات")}
-                fill="hsl(var(--primary))" 
-                radius={[4, 4, 0, 0]}
-              />
-              <Bar 
-                yAxisId="right" 
-                dataKey="revenue" 
-                name={t("Revenue (USD)", "الإيرادات (دولار أمريكي)")}
-                fill="#10b981"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <ChartContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="name" 
+                  tickLine={false}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tick={{ 
+                    fill: 'hsl(var(--muted-foreground))',
+                    textAnchor: 'end',
+                    dy: 20,
+                    transform: 'rotate(-45)' 
+                  }}
+                />
+                <YAxis 
+                  yAxisId="left"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                  stroke="hsl(var(--muted-foreground))"
+                />
+                <YAxis 
+                  yAxisId="right"
+                  orientation="right"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                  stroke="hsl(var(--muted-foreground))"
+                />
+                <Tooltip
+                  content={<ChartTooltip />}
+                />
+                <Legend 
+                  wrapperStyle={{ 
+                    paddingTop: 20
+                  }}
+                />
+                <Bar 
+                  yAxisId="left" 
+                  dataKey="bookings" 
+                  name={t("Bookings", "الحجوزات")}
+                  fill="hsl(var(--primary))" 
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar 
+                  yAxisId="right" 
+                  dataKey="revenue" 
+                  name={t("Revenue (USD)", "الإيرادات (دولار أمريكي)")}
+                  fill="#10b981"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </CardContent>
     </Card>
