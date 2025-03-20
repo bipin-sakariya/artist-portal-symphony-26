@@ -418,7 +418,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 </motion.div>
               ) : (
                 <motion.div 
-                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-white shadow-subtle"
+                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-card dark:bg-black/90 shadow-subtle"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
