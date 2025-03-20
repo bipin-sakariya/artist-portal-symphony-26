@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -51,6 +52,28 @@ const Dashboard = () => {
     pendingArtistApprovals: 1
   };
 
+  const PendingArtistApprovalCard = () => (
+    <div className="glass-card p-4 md:p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 backdrop-blur-lg">
+      <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+        <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300 flex items-center justify-center">
+          <Users className="h-5 w-5 md:h-6 md:w-6" />
+        </div>
+        <div>
+          <h3 className="font-display text-sm md:text-base font-medium">{t("Pending Artist Approvals", "")}</h3>
+          <p className="text-xs md:text-sm text-muted-foreground">
+            {t("You have", "")} {dashboardData.pendingArtistApprovals} {t("artist pending approval", "")}
+          </p>
+        </div>
+      </div>
+      
+      <Link to="/artists?tab=pending">
+        <Button className="w-full text-sm md:text-base bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 font-display">
+          {t("Review Pending Artists", "")}
+        </Button>
+      </Link>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex w-full bg-background">
       <Sidebar />
@@ -99,6 +122,12 @@ const Dashboard = () => {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              {isMobile && (
+                <div className="space-y-3 md:space-y-4">
+                  <PendingArtistApprovalCard />
+                </div>
+              )}
+              
               <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-base md:text-lg font-medium">{t("Recent Booking Requests", "")}</h3>
@@ -126,25 +155,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className="glass-card p-4 md:p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 backdrop-blur-lg">
-                  <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-                    <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300 flex items-center justify-center">
-                      <Users className="h-5 w-5 md:h-6 md:w-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-sm md:text-base font-medium">{t("Pending Artist Approvals", "")}</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground">
-                        {t("You have", "")} {dashboardData.pendingArtistApprovals} {t("artist pending approval", "")}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <Link to="/artists?tab=pending">
-                    <Button className="w-full text-sm md:text-base bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 font-display">
-                      {t("Review Pending Artists", "")}
-                    </Button>
-                  </Link>
-                </div>
+                {!isMobile && <PendingArtistApprovalCard />}
               </div>
             </div>
           </main>
