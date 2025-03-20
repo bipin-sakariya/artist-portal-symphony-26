@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -26,7 +25,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Clock, MapPin, Music, Users, Calendar as CalendarIcon, Instagram, ExternalLink, ArrowRight } from "lucide-react";
+import { Clock, MapPin, Music, Users, Calendar as CalendarIcon, Instagram, ExternalLink, ArrowRight, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
