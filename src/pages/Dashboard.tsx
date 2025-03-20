@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -12,21 +11,19 @@ import { analyticsDashboard, artists, bookingRequests } from "@/lib/dashboard-da
 import { Calendar, Music, TicketCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    // Get sidebar state from localStorage
     const savedState = localStorage.getItem('sidebarCollapsed');
     return savedState ? JSON.parse(savedState) : false;
   });
   
   useEffect(() => {
-    // Set document title
     document.title = "Dashboard | Artist Booking Platform";
     
-    // Add event listener to track sidebar state changes in localStorage
     const handleStorageChange = () => {
       const savedState = localStorage.getItem('sidebarCollapsed');
       if (savedState) {
@@ -36,7 +33,6 @@ const Dashboard = () => {
     
     window.addEventListener('storage', handleStorageChange);
     
-    // Also check for changes directly every 500ms (for same-window changes)
     const interval = setInterval(() => {
       const savedState = localStorage.getItem('sidebarCollapsed');
       if (savedState && JSON.parse(savedState) !== isCollapsed) {
@@ -50,26 +46,32 @@ const Dashboard = () => {
     };
   }, [isCollapsed]);
 
-  // Update the pendingArtistApprovals count to 1 to match the actual data
   const dashboardData = {
     ...analyticsDashboard,
     pendingArtistApprovals: 1
   };
 
   return (
-    <div className="min-h-screen flex w-full">
+    <div className="min-h-screen flex w-full bg-background">
       <Sidebar />
       
-      <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'ml-16' : 'ml-72'} ${isCollapsed ? 'max-w-[calc(100%-4rem)]' : 'max-w-[calc(100%-18rem)]'}`}>
+      <div className={cn(
+        "flex-1 transition-all duration-300",
+        isMobile 
+          ? "w-full ml-0" 
+          : isCollapsed 
+            ? "ml-16 max-w-[calc(100%-4rem)]" 
+            : "ml-72 max-w-[calc(100%-18rem)]"
+      )}>
         <Header />
         
         <PageTransition>
-          <main className="p-6">
-            <div className="mb-8">
+          <main className="p-4 md:p-6">
+            <div className="mb-6 md:mb-8">
               <h2 className="text-xl font-semibold mb-2 font-display tracking-tight">{t("Overview", "")}</h2>
             </div>
             
-            <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-4 mb-8`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
               <StatCard 
                 title={t("Total Booking Requests", "")}
                 value={dashboardData.totalBookingRequests}
@@ -96,49 +98,49 @@ const Dashboard = () => {
               />
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-medium">{t("Recent Booking Requests", "")}</h3>
-                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "")}</Button>
+                  <h3 className="font-display text-base md:text-lg font-medium">{t("Recent Booking Requests", "")}</h3>
+                  <Button variant="ghost" size="sm" className="font-display text-xs md:text-sm">{t("View All", "")}</Button>
                 </div>
                 
-                <div className="space-y-5">
+                <div className="space-y-3 md:space-y-5">
                   {bookingRequests.slice(0, 3).map((booking) => (
                     <BookingCard key={booking.id} booking={booking} />
                   ))}
                 </div>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-medium">{t("Featured Artists", "")}</h3>
-                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "")}</Button>
+                  <h3 className="font-display text-base md:text-lg font-medium">{t("Featured Artists", "")}</h3>
+                  <Button variant="ghost" size="sm" className="font-display text-xs md:text-sm">{t("View All", "")}</Button>
                 </div>
                 
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-3 md:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-5">
                     {artists.filter(a => a.isPromoted).slice(0, 2).map((artist) => (
                       <ArtistCard key={artist.id} artist={artist} />
                     ))}
                   </div>
                 </div>
                 
-                <div className="glass-card p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 backdrop-blur-lg">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="h-12 w-12 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300 flex items-center justify-center">
-                      <Users className="h-6 w-6" />
+                <div className="glass-card p-4 md:p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 backdrop-blur-lg">
+                  <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                    <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300 flex items-center justify-center">
+                      <Users className="h-5 w-5 md:h-6 md:w-6" />
                     </div>
                     <div>
-                      <h3 className="font-display font-medium">{t("Pending Artist Approvals", "")}</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <h3 className="font-display text-sm md:text-base font-medium">{t("Pending Artist Approvals", "")}</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         {t("You have", "")} {dashboardData.pendingArtistApprovals} {t("artist pending approval", "")}
                       </p>
                     </div>
                   </div>
                   
                   <Link to="/artists?tab=pending">
-                    <Button className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 font-display">
+                    <Button className="w-full text-sm md:text-base bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 font-display">
                       {t("Review Pending Artists", "")}
                     </Button>
                   </Link>

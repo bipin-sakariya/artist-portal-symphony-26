@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/hooks/use-language";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const location = useLocation();
@@ -25,6 +26,9 @@ const Header = () => {
       case "/analytics":
         setPageTitle(t("Analytics & Insights", "التحليلات والرؤى"));
         break;
+      case "/artist-dashboard":
+        setPageTitle(t("Artist Dashboard", "لوحة تحكم الفنان"));
+        break;
       case "/settings":
         setPageTitle(t("Settings", "الإعدادات"));
         break;
@@ -34,9 +38,12 @@ const Header = () => {
   }, [location.pathname, t]);
 
   return (
-    <header className="h-16 px-6 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between">
+    <header className="h-16 px-4 md:px-6 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <h1 className={`text-xl font-gotham-bold ${isMobile ? "ml-8" : ""}`}>
+        <h1 className={cn(
+          "text-lg md:text-xl font-gotham-bold",
+          isMobile ? "ml-8" : ""
+        )}>
           {pageTitle}
         </h1>
       </div>
