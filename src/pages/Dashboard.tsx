@@ -44,13 +44,11 @@ const Dashboard = () => {
               </p>
             </div>
             
-            <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-3"} gap-4 mb-8`}>
+            <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-4 mb-8`}>
               <StatCard 
                 title={t("Total Booking Requests", "")}
                 value={dashboardData.totalBookingRequests}
                 icon={TicketCheck}
-                trend={{ value: 12, isPositive: true }}
-                description={t("since last month", "")}
               />
               
               <StatCard 
@@ -64,8 +62,12 @@ const Dashboard = () => {
                 title={t("Total Artists", "")}
                 value={dashboardData.totalArtists}
                 icon={Music}
-                trend={{ value: 5, isPositive: true }}
-                description={t("since last month", "")}
+              />
+              
+              <StatCard 
+                title={t("Active Users", "")}
+                value={dashboardData.activeUsers}
+                icon={Users}
               />
             </div>
             

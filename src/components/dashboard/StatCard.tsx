@@ -7,10 +7,6 @@ interface StatCardProps {
   value: string | number;
   icon: LucideIcon;
   description?: string;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
   className?: string;
   valueClassName?: string;
 }
@@ -20,49 +16,32 @@ const StatCard = ({
   value,
   icon: Icon,
   description,
-  trend,
   className,
   valueClassName,
 }: StatCardProps) => {
   return (
     <div className={cn(
-      "glass-card p-4 flex flex-col relative group overflow-hidden transition-all duration-300 hover:shadow-elevated",
+      "glass-card p-3 flex flex-col relative group overflow-hidden transition-all duration-300 hover:shadow-elevated",
       "bg-gradient-to-br from-white/80 to-slate-50/70 dark:from-slate-900/80 dark:to-slate-800/70",
       "backdrop-blur-md border-0 rounded-xl",
       className
     )}>
-      <div className="flex justify-between items-start mb-3">
-        <div className="h-10 w-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
-          <Icon className="h-5 w-5" />
+      <div className="flex justify-between items-start mb-2">
+        <div className="h-8 w-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
+          <Icon className="h-4 w-4" />
         </div>
         <h3 className="text-xs font-medium text-slate-600 dark:text-slate-300 font-display">{title}</h3>
       </div>
       
-      <div className="mt-1">
+      <div>
         <p className={cn(
-          "text-2xl font-bold font-display tracking-tight",
+          "text-xl font-bold font-display tracking-tight",
           valueClassName || "text-slate-900 dark:text-white"
         )}>
           {value}
         </p>
         
-        {trend && (
-          <div className="flex items-center mt-1">
-            <span className={cn(
-              "inline-flex items-center text-xs font-medium font-display",
-              trend.isPositive ? "text-emerald-500" : "text-rose-500"
-            )}>
-              {trend.isPositive ? "↑" : "↓"} {trend.value}%
-            </span>
-            {description && (
-              <span className="text-xs text-slate-500 dark:text-slate-400 ml-2 font-display">
-                {description}
-              </span>
-            )}
-          </div>
-        )}
-        
-        {!trend && description && (
+        {description && (
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-display">
             {description}
           </p>
