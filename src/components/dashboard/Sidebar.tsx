@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -15,8 +14,7 @@ import {
   X,
   Palette,
   User,
-  ChevronLeft,
-  ChevronRight
+  ChevronsRight
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -116,22 +114,6 @@ const Sidebar = ({ className }: SidebarProps) => {
     </button>
   );
 
-  // Collapse toggle button - moved slightly lower on the sidebar
-  const CollapseButton = () => (
-    <Button
-      onClick={toggleCollapse}
-      variant="ghost"
-      size="icon"
-      className={cn(
-        "absolute -right-3 top-32 z-40 h-6 w-6 rounded-full border bg-background shadow-md",
-        isRTL ? "rotate-180" : ""
-      )}
-      aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-    >
-      {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-    </Button>
-  );
-
   return (
     <>
       {isMobile && <MenuButton />}
@@ -157,8 +139,6 @@ const Sidebar = ({ className }: SidebarProps) => {
           className
         )}
       >
-        {!isMobile && <CollapseButton />}
-        
         <div className={cn(
           "p-6 flex items-center justify-between gap-2 border-b",
           isCollapsed && "p-3 justify-center"
@@ -214,6 +194,23 @@ const Sidebar = ({ className }: SidebarProps) => {
           "border-t",
           isCollapsed ? "p-2 space-y-2" : "p-4 space-y-3"
         )}>
+          <button 
+            onClick={toggleCollapse} 
+            className={cn(
+              "w-full flex items-center justify-center p-2 rounded-lg transition-colors hover:bg-sidebar-accent",
+              isCollapsed ? "mb-1" : "mb-2"
+            )}
+            aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            <ChevronsRight 
+              className={cn(
+                "h-5 w-5 text-sidebar-foreground transition-transform duration-300",
+                isCollapsed ? (isRTL ? "rotate-180" : "") : (isRTL ? "" : "rotate-180")
+              )} 
+            />
+          </button>
+          
           <div className={cn(
             "flex items-center",
             isCollapsed ? "justify-center" : "justify-between"
