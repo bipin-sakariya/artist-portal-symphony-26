@@ -12,6 +12,9 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
 } from "@/components/ui";
 
 interface BudgetFieldProps {
@@ -24,16 +27,23 @@ const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
       control={control}
       name="budget"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-white flex items-center gap-2">
+        <FormItem className="flex flex-col justify-start h-full">
+          <FormLabel className="text-white flex items-center gap-2 mb-2">
             Your Budget (USD)
-            <TooltipProvider delayDuration={100}>
+            <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info className="h-4 w-4 text-orange-400 cursor-help" />
+                  <div className="inline-flex relative">
+                    <Info className="h-4 w-4 text-orange-400 cursor-help" />
+                  </div>
                 </TooltipTrigger>
-                <TooltipContent side="top" className="bg-[#232323] border-gray-700 text-white max-w-xs">
-                  <p>AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.</p>
+                <TooltipContent 
+                  side="top" 
+                  align="start" 
+                  className="bg-[#232323] border-gray-700 text-white max-w-xs z-50"
+                  sideOffset={5}
+                >
+                  <p className="text-sm">AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

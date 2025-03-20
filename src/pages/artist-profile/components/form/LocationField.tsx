@@ -24,8 +24,8 @@ const LocationField: React.FC<LocationFieldProps> = ({ control }) => {
       control={control}
       name="location"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-white">Event Location</FormLabel>
+        <FormItem className="flex flex-col justify-start h-full">
+          <FormLabel className="text-white mb-2">Event Location</FormLabel>
           <Select
             onValueChange={field.onChange}
             defaultValue={field.value}
