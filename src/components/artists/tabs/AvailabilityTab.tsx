@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
@@ -19,7 +19,7 @@ import { UseFormReturn } from "react-hook-form";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface AvailabilityTabProps {
   form: UseFormReturn<any>;
@@ -33,6 +33,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [rangeStart, setRangeStart] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
+  const [key, setKey] = useState(Date.now()); // Force re-render key
+
+  // Force calendar to re-render when blockedDates change
+  useEffect(() => {
+    setKey(Date.now());
+  }, [blockedDates.length]);
 
   // Function to toggle between single and range selection modes
   const toggleRangeMode = () => {
@@ -113,22 +119,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
-  // Custom modifiers for the calendar
-  const modifiers = {
-    rangeStart: rangeStart ? [rangeStart] : [],
-    isSelectingRange: isSelectingRange,
-    blocked: blockedDates
-  };
-
-  // Custom modifier styles
-  const modifiersStyles = {
-    rangeStart: {
-      color: "white",
-      backgroundColor: "var(--primary)",
-      borderRadius: "50%"
-    }
-  };
-
   // Function to check if a date is already blocked
   const isDateBlocked = (date: Date) => {
     return blockedDates.some(blockedDate => 
@@ -145,13 +135,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       const newBlockedDates = selectedDates.filter(date => !isDateBlocked(date));
       
       if (newBlockedDates.length === 0) {
-        toast({
-          title: t("No Changes Made", "لم يتم إجراء أي تغييرات"),
-          description: t(
-            "These dates are already blocked",
-            "هذه التواريخ محظورة بالفعل"
-          ),
-        });
+        toast.error(t("These dates are already blocked", "هذه التواريخ محظورة بالفعل"));
         return;
       }
       
@@ -160,13 +144,10 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       setRangeStart(null);
       setIsSelectingRange(false);
       
-      toast({
-        title: t("Dates Blocked", "تم حظر التواريخ"),
-        description: t(
-          `${newBlockedDates.length} date(s) have been marked as unavailable`,
-          `تم تحديد ${newBlockedDates.length} تاريخ (تواريخ) كغير متاح`
-        ),
-      });
+      toast.success(t(
+        `${newBlockedDates.length} date(s) have been marked as unavailable`,
+        `تم تحديد ${newBlockedDates.length} تاريخ (تواريخ) كغير متاح`
+      ));
     }
   };
 
@@ -187,26 +168,20 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       )
     );
     
-    toast({
-      title: t("Date Unblocked", "تم إلغاء حظر التاريخ"),
-      description: t(
-        "The selected date has been removed from your blocked dates",
-        "تم إزالة التاريخ المحدد من تواريخك المحظورة"
-      ),
-    });
+    toast.success(t(
+      "The selected date has been removed from blocked dates",
+      "تم إزالة التاريخ المحدد من تواريخك المحظورة"
+    ));
   };
 
   // Function to remove all blocked dates
   const clearAllBlockedDates = () => {
     setBlockedDates([]);
     
-    toast({
-      title: t("All Dates Unblocked", "تم إلغاء حظر جميع التواريخ"),
-      description: t(
-        "All blocked dates have been cleared",
-        "تم مسح جميع التواريخ المحظورة"
-      ),
-    });
+    toast.success(t(
+      "All blocked dates have been cleared",
+      "تم مسح جميع التواريخ المحظورة"
+    ));
   };
 
   // Group blocked dates by month for more compact display
@@ -218,29 +193,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     acc[monthYear].push(date);
     return acc;
   }, {} as Record<string, Date[]>);
-
-  // Common calendar props
-  const commonCalendarProps = {
-    disabled: (date: Date) => {
-      // Disable dates that are already in the blockedDates array
-      return blockedDates.some(disabledDate => 
-        date.getFullYear() === disabledDate.getFullYear() &&
-        date.getMonth() === disabledDate.getMonth() &&
-        date.getDate() === disabledDate.getDate()
-      );
-    },
-    modifiers: modifiers,
-    modifiersStyles: modifiersStyles,
-    numberOfMonths: window.innerWidth > 768 ? 2 : 1,
-    className: "pointer-events-auto font-gotham-book",
-    classNames: {
-      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
-      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
-      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
-      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
-      day_hidden: "invisible transition-all duration-200",
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -333,31 +285,55 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                key={`calendar-${blockedDates.length}`}
+                key={`calendar-${key}`}
               >
                 {isRangeMode && isSelectingRange ? (
-                  // In range mode and selecting the second date
                   <Calendar 
                     mode="single"
                     selected={rangeStart}
                     onSelect={handleSingleDateSelect}
-                    {...commonCalendarProps}
+                    disabled={(date) => isDateBlocked(date)}
+                    numberOfMonths={window.innerWidth > 768 ? 2 : 1}
+                    className="pointer-events-auto font-gotham-book"
+                    classNames={{
+                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
+                      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
+                      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+                      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
+                      day_hidden: "invisible transition-all duration-200",
+                    }}
                   />
                 ) : isRangeMode ? (
-                  // In range mode, selecting the first date
                   <Calendar 
                     mode="single"
                     selected={selectedDates[0]}
                     onSelect={handleSingleDateSelect}
-                    {...commonCalendarProps}
+                    disabled={(date) => isDateBlocked(date)}
+                    numberOfMonths={window.innerWidth > 768 ? 2 : 1}
+                    className="pointer-events-auto font-gotham-book"
+                    classNames={{
+                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
+                      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
+                      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+                      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
+                      day_hidden: "invisible transition-all duration-200",
+                    }}
                   />
                 ) : (
-                  // In multiple selection mode
                   <Calendar 
                     mode="multiple"
                     selected={selectedDates}
                     onSelect={handleDateSelect}
-                    {...commonCalendarProps}
+                    disabled={(date) => isDateBlocked(date)}
+                    numberOfMonths={window.innerWidth > 768 ? 2 : 1}
+                    className="pointer-events-auto font-gotham-book"
+                    classNames={{
+                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
+                      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
+                      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+                      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
+                      day_hidden: "invisible transition-all duration-200",
+                    }}
                   />
                 )}
               </motion.div>
