@@ -546,18 +546,18 @@ const BookingForm = ({
                       setSelectedDate(date);
                     }}
                     disabled={isDateUnavailable}
-                    className="bg-[#232323] text-white pointer-events-auto"
+                    className="bg-[#232323] text-white"
                     classNames={{
-                      caption_label: "text-white",
-                      day: "text-gray-200",
-                      day_selected: "bg-orange-500",
-                      day_disabled: "text-gray-600 hover:bg-transparent",
+                      day_selected: "bg-orange-500 text-white hover:bg-orange-600",
+                      day_today: "bg-orange-100/20 text-orange-600 font-bold",
+                      day_disabled: "text-red-300 bg-red-500/20 line-through hover:bg-red-500/30",
                       head_cell: "text-orange-400",
-                      nav_button: "opacity-100 text-white hover:bg-gray-700",
+                      nav_button: "text-white hover:bg-gray-700",
                     }}
                   />
-                  <div className="p-2 border-t border-gray-700 text-xs text-orange-400">
-                    Red dates are unavailable
+                  <div className="p-3 border-t border-gray-700 text-xs text-red-400 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500/20 rounded-sm"></div>
+                    <span>Red dates are unavailable</span>
                   </div>
                 </PopoverContent>
               </Popover>
