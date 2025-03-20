@@ -1,17 +1,20 @@
-
 import { useLanguage } from "@/hooks/use-language";
 import { BookingRequest } from "@/lib/dashboard-data";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import BookingDetailsDialog from "./BookingDetailsDialog";
 
 interface BookingCardProps {
   booking: BookingRequest;
   onClick?: (booking: BookingRequest) => void;
+  onStatusChange?: (bookingId: string, newStatus: string) => void;
 }
 
-const BookingCard = ({ booking, onClick }: BookingCardProps) => {
+const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => {
   const { t, language } = useLanguage();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -37,87 +40,109 @@ const BookingCard = ({ booking, onClick }: BookingCardProps) => {
     }
   };
 
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick(booking);
+    }
+    setIsDialogOpen(true);
+  };
+
+  const handleStatusChange = (newStatus: string) => {
+    if (onStatusChange) {
+      onStatusChange(booking.id, newStatus);
+    }
+  };
+
   return (
-    <div 
-      className="glass-card p-4 hover:shadow-elevated cursor-pointer transition-all"
-      onClick={() => onClick?.(booking)}
-    >
-      <div className="flex items-start justify-between gap-2 mb-4">
-        <div>
-          <Badge className={cn(
-            "mb-2 font-normal",
-            getStatusColor(booking.status)
-          )}>
+    <>
+      <div 
+        className="glass-card p-4 hover:shadow-elevated cursor-pointer transition-all"
+        onClick={handleCardClick}
+      >
+        <div className="flex items-start justify-between gap-2 mb-4">
+          <div>
+            <Badge className={cn(
+              "mb-2 font-normal",
+              getStatusColor(booking.status)
+            )}>
+              {t(
+                booking.status.charAt(0).toUpperCase() + booking.status.slice(1),
+                booking.status === "approved" ? "معتمد" : 
+                booking.status === "pending" ? "قيد الانتظار" : 
+                booking.status === "rejected" ? "مرفوض" : "مكتمل"
+              )}
+            </Badge>
+            
+            <h3 className="font-semibold">
+              {language === 'ar' ? booking.artistNameAr : booking.artistName}
+            </h3>
+            <p className="text-sm text-muted-foreground flex items-center gap-1">
+              <User className="h-3.5 w-3.5" />
+              {booking.customerName}
+            </p>
+          </div>
+          
+          <div className="text-right">
+            <p className="text-sm font-semibold">
+              {booking.budget.toLocaleString()} {booking.currency}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("Booking ID: ", "رقم الحجز: ")}#{booking.id}
+            </p>
+          </div>
+        </div>
+        
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Calendar className="h-4 w-4 text-primary/70" />
+            <span>{formatDate(booking.eventDate)}</span>
+          </div>
+          
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="h-4 w-4 text-primary/70" />
+            <span>
+              {booking.duration} {t("hours", "ساعات")}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4 text-primary/70" />
+            <span className="line-clamp-1">
+              {language === 'ar' ? booking.eventLocationAr : booking.eventLocation}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Users className="h-4 w-4 text-primary/70" />
+            <span>
+              {booking.capacity} {t("attendees", "الحضور")}
+            </span>
+          </div>
+        </div>
+        
+        <div className="mt-4 pt-3 border-t flex justify-between items-center">
+          <Badge variant="outline" className="font-normal">
             {t(
-              booking.status.charAt(0).toUpperCase() + booking.status.slice(1),
-              booking.status === "approved" ? "معتمد" : 
-              booking.status === "pending" ? "قيد الانتظار" : 
-              booking.status === "rejected" ? "مرفوض" : "مكتمل"
+              booking.eventType.charAt(0).toUpperCase() + booking.eventType.slice(1),
+              booking.eventType === "private" ? "خاص" : 
+              booking.eventType === "corporate" ? "شركة" : 
+              booking.eventType === "festival" ? "مهرجان" : "تذاكر"
             )}
           </Badge>
           
-          <h3 className="font-semibold">
-            {language === 'ar' ? booking.artistNameAr : booking.artistName}
-          </h3>
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            <User className="h-3.5 w-3.5" />
-            {booking.customerName}
-          </p>
-        </div>
-        
-        <div className="text-right">
-          <p className="text-sm font-semibold">
-            {booking.budget.toLocaleString()} {booking.currency}
-          </p>
           <p className="text-xs text-muted-foreground">
-            {t("Booking ID: ", "رقم الحجز: ")}#{booking.id}
+            {t("Created: ", "تم الإنشاء: ")}{formatDate(booking.createdAt)}
           </p>
         </div>
       </div>
-      
-      <div className="space-y-2 text-sm">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Calendar className="h-4 w-4 text-primary/70" />
-          <span>{formatDate(booking.eventDate)}</span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Clock className="h-4 w-4 text-primary/70" />
-          <span>
-            {booking.duration} {t("hours", "ساعات")}
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <MapPin className="h-4 w-4 text-primary/70" />
-          <span className="line-clamp-1">
-            {language === 'ar' ? booking.eventLocationAr : booking.eventLocation}
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Users className="h-4 w-4 text-primary/70" />
-          <span>
-            {booking.capacity} {t("attendees", "الحضور")}
-          </span>
-        </div>
-      </div>
-      
-      <div className="mt-4 pt-3 border-t flex justify-between items-center">
-        <Badge variant="outline" className="font-normal">
-          {t(
-            booking.eventType.charAt(0).toUpperCase() + booking.eventType.slice(1),
-            booking.eventType === "private" ? "خاص" : 
-            booking.eventType === "corporate" ? "شركة" : 
-            booking.eventType === "festival" ? "مهرجان" : "تذاكر"
-          )}
-        </Badge>
-        
-        <p className="text-xs text-muted-foreground">
-          {t("Created: ", "تم الإنشاء: ")}{formatDate(booking.createdAt)}
-        </p>
-      </div>
-    </div>
+
+      <BookingDetailsDialog 
+        booking={booking}
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onStatusChange={handleStatusChange}
+      />
+    </>
   );
 };
 

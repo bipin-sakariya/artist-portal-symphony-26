@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -20,7 +19,7 @@ const Bookings = () => {
   
   useEffect(() => {
     // Set document title
-    document.title = "Bookings Management | Artist Booking Platform";
+    document.title = "Bookings Management | AMP";
   }, []);
   
   useEffect(() => {
@@ -73,10 +72,18 @@ const Bookings = () => {
   };
   
   const handleSelectBooking = (booking: BookingRequest) => {
-    toast.info(t(`Selected booking for ${booking.artistName}`, `تم اختيار الحجز لـ ${booking.artistNameAr}`));
+    // This will now be handled by the BookingDetailsDialog component
   };
   
-  // Filter configurations
+  const handleStatusChange = (bookingId: string, newStatus: string) => {
+    // Update local bookings state
+    const updatedBookings = bookings.map(booking => 
+      booking.id === bookingId ? {...booking, status: newStatus} : booking
+    );
+    
+    setBookings(updatedBookings);
+  };
+  
   const filterOptions = {
     eventType: {
       label: "Event Type",
@@ -151,6 +158,7 @@ const Bookings = () => {
                     key={booking.id} 
                     booking={booking} 
                     onClick={handleSelectBooking}
+                    onStatusChange={handleStatusChange}
                   />
                 ))}
               </div>
