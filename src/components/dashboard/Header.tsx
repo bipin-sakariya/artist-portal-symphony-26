@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/hooks/use-language";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -43,15 +42,6 @@ const Header = () => {
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="relative hidden sm:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input 
-            type="search" 
-            placeholder={t("Search...", "بحث...")}
-            className="h-9 w-[200px] pl-9 pr-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary font-gotham-book"
-          />
-        </div>
-        
         <button className="relative flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
             <span className="text-white text-xs font-gotham-bold">AA</span>
