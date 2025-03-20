@@ -744,3 +744,681 @@ const EditArtist = () => {
                         </CardContent>
                       </Card>
                     </TabsContent>
+                    
+                    {/* Media Tab */}
+                    <TabsContent value="media" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Artist Images", "صور الفنان")}</CardTitle>
+                          <CardDescription>
+                            {t("Upload and manage artist profile and cover images", "تحميل وإدارة صور الملف الشخصي والغلاف للفنان")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="profileImage"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t("Profile Image", "صورة الملف الشخصي")}</FormLabel>
+                                  <div className="flex flex-col gap-4">
+                                    <div className="border rounded-md p-2 flex items-center justify-center bg-muted/30">
+                                      {field.value ? (
+                                        <img 
+                                          src={field.value} 
+                                          alt={t("Artist profile", "صورة الفنان")} 
+                                          className="w-40 h-40 object-cover rounded-md"
+                                        />
+                                      ) : (
+                                        <div className="w-40 h-40 flex items-center justify-center rounded-md border border-dashed">
+                                          <Image className="h-10 w-10 text-muted-foreground" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <FormControl>
+                                      <Input 
+                                        placeholder={t("Image URL", "رابط الصورة")} 
+                                        {...field} 
+                                      />
+                                    </FormControl>
+                                    <Button type="button" variant="outline" className="w-full">
+                                      <Image className="h-4 w-4 mr-2" />
+                                      {t("Upload New Image", "تحميل صورة جديدة")}
+                                    </Button>
+                                  </div>
+                                  <FormDescription>
+                                    {t("Square image recommended (1:1 ratio)", "يُنصح بصورة مربعة (نسبة 1:1)")}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={form.control}
+                              name="coverImage"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t("Cover Image", "صورة الغلاف")}</FormLabel>
+                                  <div className="flex flex-col gap-4">
+                                    <div className="border rounded-md p-2 flex items-center justify-center bg-muted/30">
+                                      {field.value ? (
+                                        <img 
+                                          src={field.value} 
+                                          alt={t("Artist cover", "غلاف الفنان")} 
+                                          className="w-full h-40 object-cover rounded-md"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-40 flex items-center justify-center rounded-md border border-dashed">
+                                          <Image className="h-10 w-10 text-muted-foreground" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <FormControl>
+                                      <Input 
+                                        placeholder={t("Image URL", "رابط الصورة")} 
+                                        {...field} 
+                                      />
+                                    </FormControl>
+                                    <Button type="button" variant="outline" className="w-full">
+                                      <Image className="h-4 w-4 mr-2" />
+                                      {t("Upload New Cover", "تحميل غلاف جديد")}
+                                    </Button>
+                                  </div>
+                                  <FormDescription>
+                                    {t("Wide image recommended (16:9 ratio)", "يُنصح بصورة عريضة (نسبة 16:9)")}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Media Gallery", "معرض الوسائط")}</CardTitle>
+                          <CardDescription>
+                            {t("Additional photos and videos of the artist", "صور وفيديوهات إضافية للفنان")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {/* Sample gallery items */}
+                            {[1, 2, 3, 4, 5].map((item) => (
+                              <div key={item} className="relative group">
+                                <div className="border rounded-md overflow-hidden aspect-square">
+                                  <img 
+                                    src={`https://source.unsplash.com/random/300x300?music&sig=${item}`} 
+                                    alt={t("Gallery item", "عنصر المعرض")} 
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-white">
+                                    <Image className="h-4 w-4" />
+                                  </Button>
+                                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-white">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                            
+                            {/* Add new item */}
+                            <div className="border rounded-md border-dashed flex items-center justify-center aspect-square">
+                              <Button type="button" variant="ghost" className="h-full w-full flex flex-col gap-2">
+                                <PlusCircle className="h-6 w-6" />
+                                <span className="text-xs">{t("Add Media", "إضافة وسائط")}</span>
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Music Samples", "عينات موسيقية")}</CardTitle>
+                          <CardDescription>
+                            {t("Audio tracks and music samples", "مقاطع صوتية وعينات موسيقية")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="space-y-4">
+                            {/* Sample tracks */}
+                            {[
+                              { title: "Desert Nights", titleAr: "ليالي الصحراء", duration: "3:45" },
+                              { title: "Oriental Jazz", titleAr: "جاز شرقي", duration: "4:12" },
+                              { title: "Modern Oud", titleAr: "عود معاصر", duration: "2:58" }
+                            ].map((track, index) => (
+                              <div key={index} className="flex items-center justify-between p-3 rounded-md border">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+                                    <Music className="h-5 w-5 text-primary" />
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-sm">
+                                      {language === "ar" ? track.titleAr : track.title}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">{track.duration}</p>
+                                  </div>
+                                </div>
+                                <Button type="button" variant="ghost" size="sm">
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </div>
+                            ))}
+                            
+                            {/* Add new track */}
+                            <Button type="button" variant="outline" className="w-full">
+                              <Music className="h-4 w-4 mr-2" />
+                              {t("Add Music Sample", "إضافة عينة موسيقية")}
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    {/* Pricing Tab */}
+                    <TabsContent value="pricing" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Pricing Structure", "هيكل التسعير")}</CardTitle>
+                          <CardDescription>
+                            {t("Set base prices and price rules for different event types and countries", "تعيين الأسعار الأساسية وقواعد الأسعار لأنواع الفعاليات والبلدان المختلفة")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="minimumBid"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t("Default Price", "السعر الافتراضي")}</FormLabel>
+                                  <div className="flex items-center gap-2">
+                                    <FormControl>
+                                      <Input 
+                                        type="number"
+                                        placeholder="0" 
+                                        {...field} 
+                                        onChange={(e) => {
+                                          const value = Number(e.target.value);
+                                          field.onChange(value);
+                                          setPricingMatrix(prev => ({
+                                            ...prev,
+                                            default: value
+                                          }));
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormField
+                                      control={form.control}
+                                      name="currency"
+                                      render={({ field }) => (
+                                        <Select 
+                                          value={field.value} 
+                                          onValueChange={field.onChange}
+                                        >
+                                          <SelectTrigger className="w-24">
+                                            <SelectValue placeholder="SAR" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="SAR">SAR</SelectItem>
+                                            <SelectItem value="AED">AED</SelectItem>
+                                            <SelectItem value="USD">USD</SelectItem>
+                                            <SelectItem value="EUR">EUR</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      )}
+                                    />
+                                  </div>
+                                  <FormDescription>
+                                    {t("This is the default price when no specific rules apply", "هذا هو السعر الافتراضي عندما لا تنطبق قواعد محددة")}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <h3 className="text-sm font-medium">{t("Price Rules", "قواعد التسعير")}</h3>
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                              <div className="rounded-md border p-4">
+                                <h4 className="text-sm font-medium mb-2">{t("Add New Price Rule", "إضافة قاعدة سعر جديدة")}</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                  <div>
+                                    <Select 
+                                      value={newPriceType} 
+                                      onValueChange={(value: "eventType" | "country" | "specific") => setNewPriceType(value)}
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue placeholder={t("Rule Type", "نوع القاعدة")} />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="eventType">{t("Event Type", "نوع الفعالية")}</SelectItem>
+                                        <SelectItem value="country">{t("Country", "البلد")}</SelectItem>
+                                        <SelectItem value="specific">{t("Specific Combination", "مجموعة محددة")}</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  
+                                  {(newPriceType === "eventType" || newPriceType === "specific") && (
+                                    <div>
+                                      <Select 
+                                        value={newEventType} 
+                                        onValueChange={setNewEventType}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder={t("Event Type", "نوع الفعالية")} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {eventTypes.map((type) => (
+                                            <SelectItem key={type.id} value={type.id}>
+                                              {language === "ar" ? type.labelAr : type.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  )}
+                                  
+                                  {(newPriceType === "country" || newPriceType === "specific") && (
+                                    <div>
+                                      <Select 
+                                        value={newCountry} 
+                                        onValueChange={setNewCountry}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder={t("Country", "البلد")} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {countries.map((country) => (
+                                            <SelectItem key={country.id} value={country.id}>
+                                              {language === "ar" ? country.labelAr : country.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  )}
+                                  
+                                  <div className="flex gap-2">
+                                    <Input
+                                      type="number"
+                                      placeholder={t("Price", "السعر")}
+                                      value={newPrice || ""}
+                                      onChange={(e) => setNewPrice(Number(e.target.value))}
+                                      className="flex-1"
+                                    />
+                                    <Button 
+                                      type="button" 
+                                      onClick={addPriceRule}
+                                      disabled={
+                                        (newPriceType === "eventType" && !newEventType) ||
+                                        (newPriceType === "country" && !newCountry) ||
+                                        (newPriceType === "specific" && (!newEventType || !newCountry)) ||
+                                        newPrice <= 0
+                                      }
+                                    >
+                                      {t("Add", "إضافة")}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="rounded-md border">
+                                <div 
+                                  className="flex items-center justify-between p-4 cursor-pointer"
+                                  onClick={() => toggleCategory("eventTypes")}
+                                >
+                                  <h4 className="text-sm font-medium">{t("Event Type Prices", "أسعار أنواع الفعاليات")}</h4>
+                                  {expandedCategories.eventTypes ? (
+                                    <ChevronUp className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronDown className="h-4 w-4" />
+                                  )}
+                                </div>
+                                
+                                {expandedCategories.eventTypes && (
+                                  <div className="p-4 border-t">
+                                    {Object.keys(pricingMatrix.eventTypes).length > 0 ? (
+                                      <div className="space-y-2">
+                                        {Object.entries(pricingMatrix.eventTypes).map(([eventTypeId, price]) => {
+                                          const eventType = eventTypes.find(et => et.id === eventTypeId);
+                                          return (
+                                            <div key={eventTypeId} className="flex items-center justify-between">
+                                              <span>{language === "ar" ? eventType?.labelAr : eventType?.label}</span>
+                                              <div className="flex items-center gap-2">
+                                                <span>{price} {form.watch("currency")}</span>
+                                                <Button 
+                                                  type="button" 
+                                                  variant="ghost" 
+                                                  size="sm"
+                                                  onClick={() => removePriceRule("eventType", eventTypeId)}
+                                                >
+                                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    ) : (
+                                      <p className="text-muted-foreground text-sm">
+                                        {t("No event type specific prices set yet", "لم يتم تعيين أسعار محددة لنوع الفعالية بعد")}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <div className="rounded-md border">
+                                <div 
+                                  className="flex items-center justify-between p-4 cursor-pointer"
+                                  onClick={() => toggleCategory("countries")}
+                                >
+                                  <h4 className="text-sm font-medium">{t("Country Prices", "أسعار البلدان")}</h4>
+                                  {expandedCategories.countries ? (
+                                    <ChevronUp className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronDown className="h-4 w-4" />
+                                  )}
+                                </div>
+                                
+                                {expandedCategories.countries && (
+                                  <div className="p-4 border-t">
+                                    {Object.keys(pricingMatrix.countries).length > 0 ? (
+                                      <div className="space-y-2">
+                                        {Object.entries(pricingMatrix.countries).map(([countryId, price]) => {
+                                          const country = countries.find(c => c.id === countryId);
+                                          return (
+                                            <div key={countryId} className="flex items-center justify-between">
+                                              <span>{language === "ar" ? country?.labelAr : country?.label}</span>
+                                              <div className="flex items-center gap-2">
+                                                <span>{price} {form.watch("currency")}</span>
+                                                <Button 
+                                                  type="button" 
+                                                  variant="ghost" 
+                                                  size="sm"
+                                                  onClick={() => removePriceRule("country", undefined, countryId)}
+                                                >
+                                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    ) : (
+                                      <p className="text-muted-foreground text-sm">
+                                        {t("No country specific prices set yet", "لم يتم تعيين أسعار محددة للبلدان بعد")}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <div className="rounded-md border">
+                                <div 
+                                  className="flex items-center justify-between p-4 cursor-pointer"
+                                  onClick={() => toggleCategory("specific")}
+                                >
+                                  <h4 className="text-sm font-medium">{t("Specific Combinations", "مجموعات محددة")}</h4>
+                                  {expandedCategories.specific ? (
+                                    <ChevronUp className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronDown className="h-4 w-4" />
+                                  )}
+                                </div>
+                                
+                                {expandedCategories.specific && (
+                                  <div className="p-4 border-t">
+                                    {Object.keys(pricingMatrix.specific).length > 0 ? (
+                                      <div className="space-y-2">
+                                        {Object.entries(pricingMatrix.specific).map(([eventTypeId, countries]) => {
+                                          const eventType = eventTypes.find(et => et.id === eventTypeId);
+                                          return Object.entries(countries).map(([countryId, price]) => {
+                                            const country = countries.find(c => c.id === countryId);
+                                            return (
+                                              <div key={`${eventTypeId}-${countryId}`} className="flex items-center justify-between">
+                                                <span>
+                                                  {language === "ar" ? eventType?.labelAr : eventType?.label} - {language === "ar" ? country?.labelAr : country?.label}
+                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                  <span>{price} {form.watch("currency")}</span>
+                                                  <Button 
+                                                    type="button" 
+                                                    variant="ghost" 
+                                                    size="sm"
+                                                    onClick={() => removePriceRule("specific", eventTypeId, countryId)}
+                                                  >
+                                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                                  </Button>
+                                                </div>
+                                              </div>
+                                            );
+                                          });
+                                        })}
+                                      </div>
+                                    ) : (
+                                      <p className="text-muted-foreground text-sm">
+                                        {t("No specific combination prices set yet", "لم يتم تعيين أسعار لمجموعات محددة بعد")}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="mt-6">
+                              <h3 className="text-sm font-medium mb-2">{t("Price Matrix Preview", "معاينة مصفوفة الأسعار")}</h3>
+                              <div className="rounded-md border overflow-x-auto">
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead className="w-40">{t("Event Type / Country", "نوع الفعالية / البلد")}</TableHead>
+                                      {countries.slice(0, 5).map((country) => (
+                                        <TableHead key={country.id}>
+                                          {language === "ar" ? country.labelAr : country.label}
+                                        </TableHead>
+                                      ))}
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    {eventTypes.map((eventType) => (
+                                      <TableRow key={eventType.id}>
+                                        <TableCell className="font-medium">
+                                          {language === "ar" ? eventType.labelAr : eventType.label}
+                                        </TableCell>
+                                        {countries.slice(0, 5).map((country) => (
+                                          <TableCell key={country.id}>
+                                            {getEffectivePrice(eventType.id, country.id)} {form.watch("currency")}
+                                          </TableCell>
+                                        ))}
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                    
+                    {/* Settings Tab */}
+                    <TabsContent value="settings" className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("Artist Settings", "إعدادات الفنان")}</CardTitle>
+                          <CardDescription>
+                            {t("Manage verification, approval, and other settings", "إدارة التحقق والموافقة والإعدادات الأخرى")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="isVerified"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("Verified Artist", "فنان موثق")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("Mark this artist as verified with a badge", "تمييز هذا الفنان بعلامة التوثيق")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={form.control}
+                              name="isPromoted"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("Promote Artist", "ترويج الفنان")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("Show this artist in featured sections", "عرض هذا الفنان في الأقسام المميزة")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="isInternational"
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                  <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                      {t("International Artist", "فنان دولي")}
+                                    </FormLabel>
+                                    <FormDescription>
+                                      {t("This artist is available for international bookings", "هذا الفنان متاح للحجوزات الدولية")}
+                                    </FormDescription>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={form.control}
+                              name="approvalStatus"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t("Approval Status", "حالة الموافقة")}</FormLabel>
+                                  <Select 
+                                    value={field.value} 
+                                    onValueChange={field.onChange}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder={t("Select status", "اختر الحالة")} />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value="approved">
+                                        {t("Approved", "تمت الموافقة")}
+                                      </SelectItem>
+                                      <SelectItem value="pending">
+                                        {t("Pending", "قيد الانتظار")}
+                                      </SelectItem>
+                                      <SelectItem value="rejected">
+                                        {t("Rejected", "مرفوض")}
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <FormDescription>
+                                    {t("Control whether this artist is visible on the platform", "التحكم في ما إذا كان هذا الفنان مرئيًا على المنصة")}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-destructive">{t("Danger Zone", "منطقة الخطر")}</CardTitle>
+                          <CardDescription>
+                            {t("Irreversible actions for this artist", "إجراءات لا رجعة فيها لهذا الفنان")}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-4">
+                          <div className="rounded-lg border border-destructive p-4">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium text-destructive">
+                                  {t("Delete Artist", "حذف الفنان")}
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("Permanently delete this artist and all associated data", "حذف هذا الفنان وجميع البيانات المرتبطة به بشكل دائم")}
+                                </p>
+                              </div>
+                              <Button type="button" variant="destructive">
+                                {t("Delete Artist", "حذف الفنان")}
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+                
+                <div className="sticky bottom-0 mt-8 p-4 bg-background/80 backdrop-blur-sm border-t flex justify-end">
+                  <Button type="submit" className="w-full md:w-auto">
+                    <Save className="h-4 w-4 mr-2" />
+                    {t("Save Changes", "حفظ التغييرات")}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </main>
+        </PageTransition>
+      </div>
+    </div>
+  );
+};
+
+export default EditArtist;
