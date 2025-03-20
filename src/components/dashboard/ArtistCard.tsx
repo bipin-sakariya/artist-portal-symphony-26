@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/hooks/use-language";
 import { Artist } from "@/lib/dashboard-data";
 import { CheckCircle, ChevronRight, Edit, Star, XCircle } from "lucide-react";
@@ -49,12 +50,6 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
     if (onClick) {
       onClick(artist);
     }
-  };
-
-  const displayAmount = () => {
-    const amounts = [70000, 80000, 100000];
-    const index = artist.id.charCodeAt(0) % amounts.length;
-    return `$${amounts[index].toLocaleString()}`;
   };
 
   return (
@@ -128,14 +123,7 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
           </button>
         </div>
         
-        <div className="mt-3 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            <span>{t("Min. Budget: ", "الحد الأدنى للميزانية: ")}</span>
-            <span className="font-medium text-foreground">
-              {displayAmount()}
-            </span>
-          </div>
-          
+        <div className="mt-3 flex items-center justify-end">
           <button className="p-1 rounded-full text-primary hover:bg-primary/5 transition-colors">
             <ChevronRight className="h-5 w-5" />
           </button>
