@@ -62,7 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				orange: {
+          DEFAULT: '#FF6B43',
+          50: '#FFF6F2',
+          100: '#FFE9E0',
+          200: '#FFD0BC',
+          300: '#FFB797',
+          400: '#FF9E73',
+          500: '#FF6B43',
+          600: '#FF4B1B',
+          700: '#F22E00',
+          800: '#CA2600',
+          900: '#A21F00',
+          950: '#8B1A00',
+        }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -114,6 +128,8 @@ export default {
 				'float': 'float 3s ease-in-out infinite',
 			},
 			fontFamily: {
+				'gotham-bold': ['Gotham Bold', 'SF Pro Display', 'sans-serif'],
+				'gotham-book': ['Gotham Book', 'SF Pro Display', 'sans-serif'],
 				sans: ['Plus Jakarta Sans', 'SF Pro Display', 'Inter', 'sans-serif'],
 				display: ['Outfit', 'SF Pro Display', 'sans-serif'],
 			},

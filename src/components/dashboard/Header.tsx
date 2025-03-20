@@ -39,7 +39,7 @@ const Header = () => {
   return (
     <header className="h-16 px-6 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <h1 className={`text-xl font-semibold ${isMobile ? "ml-8" : ""}`}>
+        <h1 className={`text-xl font-gotham-bold ${isMobile ? "ml-8" : ""}`}>
           {pageTitle}
         </h1>
       </div>
@@ -50,7 +50,7 @@ const Header = () => {
           <input 
             type="search" 
             placeholder={t("Search...", "بحث...")}
-            className="h-9 w-[200px] pl-9 pr-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            className="h-9 w-[200px] pl-9 pr-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary font-gotham-book"
           />
         </div>
         
@@ -67,9 +67,9 @@ const Header = () => {
         
         <button className="relative flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-white text-xs font-bold">AA</span>
+            <span className="text-white text-xs font-gotham-bold">AA</span>
           </div>
-          <span className="text-sm font-medium hidden sm:inline-block">Admin</span>
+          <span className="text-sm font-gotham-book hidden sm:inline-block">Admin</span>
         </button>
       </div>
     </header>

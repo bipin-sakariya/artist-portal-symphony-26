@@ -65,8 +65,8 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>{t("Artist Availability", "توفر الفنان")}</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-gotham-bold">{t("Artist Availability", "توفر الفنان")}</CardTitle>
+          <CardDescription className="font-gotham-book">
             {t("Block dates when the artist is not available", "حظر التواريخ عندما لا يكون الفنان متاحًا")}
           </CardDescription>
         </CardHeader>
@@ -75,7 +75,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-base font-medium">
+                <h3 className="text-base font-gotham-bold">
                   {t("Select dates to block", "حدد التواريخ للحظر")}
                 </h3>
                 <div className="flex gap-2">
@@ -84,7 +84,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                     disabled={selectedDates.length === 0}
                     variant="outline"
                     size="sm"
-                    className="gap-1"
+                    className="gap-1 font-gotham-book"
                   >
                     <CalendarX className="h-4 w-4" />
                     {t("Block Selected", "حظر المحدد")}
@@ -94,7 +94,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                       onClick={clearSelectedDates}
                       variant="ghost"
                       size="sm"
-                      className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                      className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10 font-gotham-book"
                     >
                       <X className="h-4 w-4" />
                       {t("Clear", "مسح")}
@@ -108,16 +108,16 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                   selected={selectedDates}
                   onSelect={setSelectedDates}
                   disabled={disabledDays}
-                  className="pointer-events-auto"
+                  className="pointer-events-auto font-gotham-book"
                 />
               </div>
               {selectedDates.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <p className="text-sm text-muted-foreground mr-2 py-1">
+                  <p className="text-sm text-muted-foreground mr-2 py-1 font-gotham-book">
                     {t("Selected dates:", "التواريخ المحددة:")}
                   </p>
                   {selectedDates.map((date, i) => (
-                    <Badge key={i} variant="outline" className="gap-1">
+                    <Badge key={i} variant="outline" className="gap-1 font-gotham-book">
                       {format(date, language === "ar" ? "dd/MM/yyyy" : "MMM d, yyyy")}
                     </Badge>
                   ))}
@@ -127,7 +127,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
             
             <div className="lg:col-span-1">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-base font-medium">
+                <h3 className="text-base font-gotham-bold">
                   {t("Blocked Dates", "التواريخ المحظورة")}
                 </h3>
                 {blockedDates.length > 0 && (
@@ -135,7 +135,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                     variant="ghost" 
                     size="sm" 
                     onClick={clearAllBlockedDates}
-                    className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                    className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10 font-gotham-book"
                   >
                     <Trash2 className="h-4 w-4" />
                     {t("Clear All", "مسح الكل")}
@@ -147,10 +147,10 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 <div className="flex items-center justify-center h-64 border rounded-md p-6 bg-muted/30">
                   <div className="text-center text-muted-foreground">
                     <CalendarCheck className="h-12 w-12 mx-auto mb-2 text-muted-foreground/50" />
-                    <p>
+                    <p className="font-gotham-book">
                       {t("No blocked dates yet", "لا توجد تواريخ محظورة حتى الآن")}
                     </p>
-                    <p className="text-sm mt-2">
+                    <p className="text-sm mt-2 font-gotham-book">
                       {t("Select dates on the calendar to block them", "حدد تواريخًا في التقويم لحظرها")}
                     </p>
                   </div>
@@ -160,7 +160,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                   <div className="space-y-4">
                     {Object.entries(groupedBlockedDates).map(([monthYear, dates]) => (
                       <div key={monthYear} className="border-b pb-3 last:border-0 last:pb-0">
-                        <h4 className="font-medium text-sm mb-2">{monthYear}</h4>
+                        <h4 className="font-gotham-bold text-sm mb-2">{monthYear}</h4>
                         <div className="flex flex-wrap gap-2">
                           {dates
                             .sort((a, b) => a.getTime() - b.getTime())
@@ -168,7 +168,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                               <Badge 
                                 key={index}
                                 variant="secondary"
-                                className="flex items-center gap-1 pr-1"
+                                className="flex items-center gap-1 pr-1 font-gotham-book"
                               >
                                 {format(date, "d")}
                                 <Button 
