@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
@@ -22,8 +21,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [rangeStart, setRangeStart] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
-  // Function to toggle between single and range selection modes
+  useEffect(() => {
+    setForceUpdate(prev => prev + 1);
+  }, [blockedDates]);
+
   const toggleRangeMode = () => {
     setIsRangeMode(!isRangeMode);
     setSelectedDates([]);
@@ -31,7 +34,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     setIsSelectingRange(false);
   };
 
-  // Handle date selection based on the mode (single or range)
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (!isRangeMode || !dates) {
       setSelectedDates(dates || []);
@@ -39,16 +41,11 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
-  // Handle single date selection in range mode
   const handleSingleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // If already selecting a range
     if (isSelectingRange && rangeStart) {
-      // Create array of dates in the range
       const range: Date[] = [];
-      
-      // Ensure the range is always from earlier to later date, regardless of selection order
       const startDate = rangeStart < date ? rangeStart : date;
       const endDate = rangeStart < date ? date : rangeStart;
       
@@ -62,21 +59,18 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       setIsSelectingRange(false);
       setRangeStart(null);
     } else {
-      // First click in range selection
       setRangeStart(date);
       setSelectedDates([date]);
       setIsSelectingRange(true);
     }
   };
 
-  // Custom modifiers for the calendar
   const modifiers = {
     rangeStart: rangeStart ? [rangeStart] : [],
     isSelectingRange: isSelectingRange,
     blocked: blockedDates
   };
 
-  // Custom modifier styles
   const modifiersStyles = {
     rangeStart: {
       color: "white",
@@ -85,7 +79,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
-  // Function to check if a date is already blocked
   const isDateBlocked = (date: Date) => {
     return blockedDates.some(blockedDate => 
       blockedDate.getFullYear() === date.getFullYear() &&
@@ -94,35 +87,31 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     );
   };
 
-  // Function to block selected dates
   const blockDates = () => {
     if (selectedDates.length > 0) {
-      // Filter out dates that are already blocked
       const newBlockedDates = selectedDates.filter(date => !isDateBlocked(date));
       
       if (newBlockedDates.length === 0) {
-        // If all selected dates are already blocked, just clear the selection
         setSelectedDates([]);
         setRangeStart(null);
         setIsSelectingRange(false);
         return;
       }
       
-      setBlockedDates(prev => [...prev, ...newBlockedDates]);
+      const newDatesToAdd = newBlockedDates.map(date => new Date(date));
+      setBlockedDates(prev => [...prev, ...newDatesToAdd]);
       setSelectedDates([]);
       setRangeStart(null);
       setIsSelectingRange(false);
     }
   };
 
-  // Function to clear all selected dates
   const clearSelectedDates = () => {
     setSelectedDates([]);
     setRangeStart(null);
     setIsSelectingRange(false);
   };
 
-  // Function to remove a blocked date
   const removeBlockedDate = (dateToRemove: Date) => {
     setBlockedDates(prev => 
       prev.filter(date => 
@@ -133,12 +122,10 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     );
   };
 
-  // Function to remove all blocked dates
   const clearAllBlockedDates = () => {
     setBlockedDates([]);
   };
 
-  // Group blocked dates by month for more compact display
   const groupedBlockedDates = blockedDates.reduce((acc, date) => {
     const monthYear = format(date, language === "ar" ? "MM/yyyy" : "MMMM yyyy");
     if (!acc[monthYear]) {
@@ -148,10 +135,8 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     return acc;
   }, {} as Record<string, Date[]>);
 
-  // Common calendar props
   const commonCalendarProps = {
     disabled: (date: Date) => {
-      // Disable dates that are already in the blockedDates array
       return blockedDates.some(disabledDate => 
         date.getFullYear() === disabledDate.getFullYear() &&
         date.getMonth() === disabledDate.getMonth() &&
@@ -165,7 +150,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     classNames: {
       day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
       day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
-      day_disabled: "text-muted-foreground opacity-50 bg-red-50/30 line-through rounded-md transition-all duration-200",
+      day_disabled: "text-muted-foreground opacity-70 bg-red-100/60 dark:bg-red-950/60 line-through rounded-md transition-all duration-200",
       day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
       day_hidden: "invisible transition-all duration-200",
     }
@@ -262,17 +247,23 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
+                key={`calendar-${forceUpdate}`}
               >
-                {isRangeMode ? (
-                  // Range mode
+                {isRangeMode && isSelectingRange ? (
                   <Calendar 
                     mode="single"
                     selected={rangeStart}
                     onSelect={handleSingleDateSelect}
                     {...commonCalendarProps}
                   />
+                ) : isRangeMode ? (
+                  <Calendar 
+                    mode="single"
+                    selected={selectedDates[0]}
+                    onSelect={handleSingleDateSelect}
+                    {...commonCalendarProps}
+                  />
                 ) : (
-                  // Multiple selection mode
                   <Calendar 
                     mode="multiple"
                     selected={selectedDates}
@@ -358,6 +349,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
+                  key="no-blocked-dates"
                 >
                   <div className="text-center text-muted-foreground">
                     <motion.div
@@ -385,6 +377,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
+                  key={`blocked-dates-${blockedDates.length}`}
                 >
                   <AnimatePresence>
                     <div className="space-y-4">
@@ -405,7 +398,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                               .sort((a, b) => a.getTime() - b.getTime())
                               .map((date, index) => (
                                 <motion.div
-                                  key={index}
+                                  key={`${date.getTime()}-${index}`}
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: (groupIndex * 0.1) + (index * 0.02) }}
