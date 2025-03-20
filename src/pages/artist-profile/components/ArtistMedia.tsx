@@ -35,10 +35,11 @@ const ArtistMedia: React.FC = () => {
           <iframe 
             width="100%" 
             height="100%" 
-            src="https://www.youtube.com/embed/ZwgH9KXgXdw" 
+            src="https://www.youtube.com/embed/mS9eeAW6cY0?si=0D-uA-cdDwm70_ox" 
             title="YouTube video player" 
             frameBorder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             className="rounded-md"
           ></iframe>
