@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -174,13 +173,6 @@ const ArtistProfile = () => {
               {artistData.tagline}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-sm mb-8">
-              <div className="flex items-center gap-1">
-                <Star className="text-yellow-400 h-4 w-4" />
-                <span>{artistData.rating}</span>
-                <span className="text-gray-400">
-                  ({artistData.reviews} reviews)
-                </span>
-              </div>
               <div className="flex items-center gap-1">
                 <MapPin className="text-orange-400 h-4 w-4" />
                 <span>{artistData.location}</span>
@@ -376,7 +368,7 @@ const ArtistProfile = () => {
               <Card className="bg-[#181818] border-gray-800 overflow-hidden animate-fade-in">
                 <div className="h-2 bg-orange-500"></div>
                 <CardContent className="p-6 space-y-6">
-                  <h2 className="text-2xl font-gotham-bold text-center">Ready to Book?</h2>
+                  <h2 className="text-2xl font-gotham-bold text-center text-white">Ready to Book?</h2>
                   <p className="text-gray-400 text-center">
                     Let Sarah create a memorable experience for your event
                   </p>
@@ -392,7 +384,7 @@ const ArtistProfile = () => {
               {/* Social Links */}
               <Card className="bg-[#181818] border-gray-800 animate-fade-in">
                 <CardContent className="p-6 space-y-6">
-                  <h2 className="text-2xl font-gotham-bold">Follow Sarah</h2>
+                  <h2 className="text-2xl font-gotham-bold text-white">Follow Sarah</h2>
                   
                   <div className="space-y-4">
                     <a 
@@ -423,7 +415,7 @@ const ArtistProfile = () => {
               {/* Contact Information */}
               <Card className="bg-[#181818] border-gray-800 animate-fade-in">
                 <CardContent className="p-6 space-y-4">
-                  <h2 className="text-2xl font-gotham-bold">Contact for Bookings</h2>
+                  <h2 className="text-2xl font-gotham-bold text-white">Contact for Bookings</h2>
                   <div className="space-y-3 text-gray-300">
                     <p className="flex items-center gap-2">
                       <MapPin size={18} className="text-orange-400" />
@@ -712,3 +704,4 @@ const BookingForm = ({
 };
 
 export default ArtistProfile;
+
