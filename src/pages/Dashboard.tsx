@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -39,9 +38,6 @@ const Dashboard = () => {
           <main className="p-6">
             <div className="mb-8">
               <h2 className="text-xl font-semibold mb-2 font-display tracking-tight">{t("Overview", "")}</h2>
-              <p className="text-muted-foreground">
-                {t("Welcome to your artist booking platform", "")}
-              </p>
             </div>
             
             <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-4 mb-8`}>
