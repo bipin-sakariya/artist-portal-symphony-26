@@ -35,8 +35,8 @@ const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="top" 
-                  align="start" 
+                  side="left" 
+                  align="center" 
                   className="bg-[#232323] border-gray-700 text-white max-w-[280px] z-50"
                   sideOffset={5}
                 >
