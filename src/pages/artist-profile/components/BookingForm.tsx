@@ -54,7 +54,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 defaultValue={field.value}
               >
                 <FormControl>
-                  <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
+                  <SelectTrigger 
+                    className="bg-[#232323] border-gray-700 text-white focus:ring-0 focus:ring-offset-0 focus:border-orange-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  >
                     <SelectValue placeholder="Select event type" />
                   </SelectTrigger>
                 </FormControl>
@@ -82,7 +84,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   <FormControl>
                     <Button
                       variant="outline"
-                      className={`w-full flex items-center justify-between bg-[#232323] border-gray-700 text-white hover:bg-[#2a2a2a] hover:text-white ${!field.value && "text-gray-400"}`}
+                      className={`w-full flex items-center justify-between bg-[#232323] border-gray-700 text-white hover:bg-[#2a2a2a] hover:text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-orange-500 ${!field.value && "text-gray-400"}`}
                     >
                       <div className="flex items-center">
                         <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
@@ -134,7 +136,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
                       placeholder="Estimated guests"
-                      className="bg-[#232323] border-gray-700 pl-10 text-white"
+                      className="bg-[#232323] border-gray-700 pl-10 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                       {...field}
                     />
                   </div>
@@ -155,7 +157,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
+                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white focus:ring-0 focus:ring-offset-0 focus:border-orange-500 focus-visible:ring-0 focus-visible:ring-offset-0">
                       <div className="flex items-center">
                         <Clock className="mr-2 h-4 w-4 text-gray-400" />
                         <SelectValue placeholder="Select duration" />
@@ -188,7 +190,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
+                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white focus:ring-0 focus:ring-offset-0 focus:border-orange-500 focus-visible:ring-0 focus-visible:ring-offset-0">
                       <div className="flex items-center">
                         <MapPin className="mr-2 h-4 w-4 text-gray-400" />
                         <SelectValue placeholder="Select location" />
@@ -222,7 +224,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
                     <Input
                       placeholder="Enter your budget"
-                      className="bg-[#232323] border-gray-700 pl-8 text-white"
+                      className="bg-[#232323] border-gray-700 pl-8 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                       {...field}
                     />
                   </div>
@@ -242,7 +244,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               <FormControl>
                 <Textarea
                   placeholder="Any special requests or details about your event"
-                  className="resize-none bg-[#232323] border-gray-700 h-16 text-white"
+                  className="resize-none bg-[#232323] border-gray-700 h-16 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                   {...field}
                 />
               </FormControl>
