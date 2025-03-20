@@ -39,10 +39,13 @@ const Header = () => {
 
   return (
     <header className="h-16 px-4 md:px-6 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10 flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <div className={cn(
+        "flex items-center",
+        isMobile ? "justify-center w-full" : "justify-start gap-4"
+      )}>
         <h1 className={cn(
           "text-lg md:text-xl font-gotham-bold",
-          isMobile ? "ml-8" : ""
+          isMobile ? "text-center" : ""
         )}>
           {pageTitle}
         </h1>

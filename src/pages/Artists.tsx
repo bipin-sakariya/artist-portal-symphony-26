@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -37,11 +36,9 @@ const Artists = () => {
   });
   
   useEffect(() => {
-    // Set document title
     document.title = "Artists Management | Artist Booking Platform";
   }, []);
   
-  // Update activeTab when URL query parameter changes
   useEffect(() => {
     if (tabFromQuery && ['all', 'approved', 'pending', 'rejected'].includes(tabFromQuery)) {
       setActiveTab(tabFromQuery);
@@ -49,15 +46,12 @@ const Artists = () => {
   }, [tabFromQuery]);
   
   useEffect(() => {
-    // Apply filters and search
     let filtered = [...artists];
     
-    // Apply tab filter
     if (activeTab !== "all") {
       filtered = filtered.filter(artist => artist.approvalStatus === activeTab);
     }
     
-    // Apply search
     if (searchValue) {
       const lowerCaseSearch = searchValue.toLowerCase();
       filtered = filtered.filter(artist => 
@@ -67,7 +61,6 @@ const Artists = () => {
       );
     }
     
-    // Apply additional filters
     if (Object.keys(activeFilters).length) {
       if (activeFilters.genre?.length) {
         filtered = filtered.filter(artist => activeFilters.genre.includes(artist.genre.toLowerCase()));
@@ -89,7 +82,7 @@ const Artists = () => {
     }
     
     setFilteredArtists(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   }, [artists, activeTab, searchValue, activeFilters]);
   
   const handleSearchChange = (value: string) => {
@@ -108,7 +101,6 @@ const Artists = () => {
     toast.info("Add new artist functionality to be implemented");
   };
   
-  // Filter configurations
   const filterOptions = {
     genre: {
       label: "Genre",
@@ -139,11 +131,9 @@ const Artists = () => {
     }
   };
 
-  // Update URL when tab changes
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     
-    // Update URL query parameter
     const newUrl = new URL(window.location.href);
     if (value === "all") {
       newUrl.searchParams.delete('tab');
@@ -153,7 +143,6 @@ const Artists = () => {
     window.history.pushState({}, '', newUrl.toString());
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredArtists.length / ARTISTS_PER_PAGE);
   const paginatedArtists = filteredArtists.slice(
     (currentPage - 1) * ARTISTS_PER_PAGE,
@@ -181,8 +170,11 @@ const Artists = () => {
         
         <PageTransition>
           <main className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-              <div>
+            <div className={cn(
+              "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8",
+              isMobile ? "mt-2" : ""
+            )}>
+              <div className={cn(isMobile ? "w-full text-center" : "")}>
                 <h2 className="text-xl font-semibold mb-1">{t("Artist Management", "")}</h2>
                 <p className="text-muted-foreground">
                   {t("Manage all artists on the platform", "")}
@@ -190,7 +182,10 @@ const Artists = () => {
               </div>
               
               <Button 
-                className="flex items-center gap-1 self-start sm:self-auto" 
+                className={cn(
+                  "flex items-center gap-1",
+                  isMobile ? "w-full justify-center" : "self-start sm:self-auto"
+                )}
                 onClick={handleAddArtist}
               >
                 <PlusCircle className="h-4 w-4" />
@@ -238,7 +233,6 @@ const Artists = () => {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <Pagination className="mt-8">
                     <PaginationContent>
@@ -258,7 +252,6 @@ const Artists = () => {
                           (page >= currentPage - 1 && page <= currentPage + 1)
                         )
                         .map((page, index, array) => {
-                          // Add ellipsis if pages are skipped
                           if (index > 0 && array[index - 1] !== page - 1) {
                             return (
                               <React.Fragment key={`ellipsis-${page}`}>
