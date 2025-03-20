@@ -160,11 +160,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     },
     modifiers: modifiers,
     modifiersStyles: modifiersStyles,
+    numberOfMonths: 2,
     className: "pointer-events-auto font-gotham-book",
     classNames: {
       day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
       day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
-      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+      day_disabled: "text-muted-foreground opacity-50 bg-red-50/30 line-through rounded-md transition-all duration-200",
       day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
       day_hidden: "invisible transition-all duration-200",
     }
@@ -184,18 +185,18 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <Button 
-                variant={isRangeMode ? "default" : "secondary"} 
+                variant={isRangeMode ? "outline" : "default"} 
                 size="sm" 
-                className="gap-1 font-gotham-book transition-all duration-200"
+                className={`gap-1 font-gotham-book transition-all duration-200 ${!isRangeMode ? "bg-primary text-primary-foreground" : "text-foreground"}`}
                 onClick={toggleRangeMode}
               >
                 <CalendarIcon className="h-4 w-4" />
                 {t("Single Select", "اختيار فردي")}
               </Button>
               <Button 
-                variant={isRangeMode ? "secondary" : "default"} 
+                variant={isRangeMode ? "default" : "outline"} 
                 size="sm" 
-                className="gap-1 font-gotham-book transition-all duration-200"
+                className={`gap-1 font-gotham-book transition-all duration-200 ${isRangeMode ? "bg-primary text-primary-foreground" : "text-foreground"}`}
                 onClick={toggleRangeMode}
               >
                 <CalendarRange className="h-4 w-4" />
