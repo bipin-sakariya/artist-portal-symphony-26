@@ -232,16 +232,7 @@ const ArtistBookingCard = ({ booking, onClick }: ArtistBookingCardProps) => {
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-2 justify-end pt-4 border-t">
-              <Button variant="outline">
-                <FileText className="mr-2 h-4 w-4" />
-                {t("Download Contract", "تنزيل العقد")}
-              </Button>
-              
-              <Button>
-                {t("Contact Customer", "الاتصال بالعميل")}
-              </Button>
-            </div>
+            {/* Footer buttons section has been removed */}
           </div>
         </DialogContent>
       </Dialog>
