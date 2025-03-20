@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
@@ -43,12 +44,6 @@ const Analytics = () => {
   const genreData = analyticsDashboard.mostRequestedGenres.map(genre => ({
     name: language === 'ar' ? genre.genreAr : genre.genre,
     value: genre.count
-  }));
-  
-  const artistData = analyticsDashboard.topArtists.map(artist => ({
-    name: language === 'ar' ? artist.nameAr : artist.name,
-    bookings: artist.bookings,
-    revenue: artist.revenue
   }));
   
   // Colors for pie chart
@@ -187,80 +182,6 @@ const Analytics = () => {
                 </CardContent>
               </Card>
             </div>
-            
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>{t("Top Performing Artists", "أفضل الفنانين أداءً")}</CardTitle>
-                <CardDescription>
-                  {t("Artists with the highest bookings and revenue", "الفنانون ذوو الحجوزات والإيرادات الأعلى")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-96 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={artistData}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                      <XAxis 
-                        dataKey="name" 
-                        tickLine={false}
-                        axisLine={{ stroke: 'hsl(var(--border))' }}
-                        tick={{ 
-                          fill: 'hsl(var(--muted-foreground))',
-                          textAnchor: 'end',
-                          dy: 20,
-                          transform: 'rotate(-45)' 
-                        }}
-                      />
-                      <YAxis 
-                        yAxisId="left"
-                        tickLine={false}
-                        axisLine={false}
-                        tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                        stroke="hsl(var(--muted-foreground))"
-                      />
-                      <YAxis 
-                        yAxisId="right"
-                        orientation="right"
-                        tickLine={false}
-                        axisLine={false}
-                        tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                        stroke="hsl(var(--muted-foreground))"
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--background))',
-                          borderColor: 'hsl(var(--border))',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-                        }}
-                      />
-                      <Legend 
-                        wrapperStyle={{ 
-                          paddingTop: 20
-                        }}
-                      />
-                      <Bar 
-                        yAxisId="left" 
-                        dataKey="bookings" 
-                        name={t("Bookings", "الحجوزات")}
-                        fill="hsl(var(--primary))" 
-                        radius={[4, 4, 0, 0]}
-                      />
-                      <Bar 
-                        yAxisId="right" 
-                        dataKey="revenue" 
-                        name={t("Revenue (USD)", "الإيرادات (دولار أمريكي)")}
-                        fill="#10b981"
-                        radius={[4, 4, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card>
