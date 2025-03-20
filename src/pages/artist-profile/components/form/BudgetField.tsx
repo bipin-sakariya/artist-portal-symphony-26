@@ -58,11 +58,12 @@ const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
-                  const value = Number(e.target.value.replace(/[^0-9]/g, ''));
-                  setShowBudgetHint(value > 0 && value < minBudget);
+                  // Don't show the hint while typing
+                  setShowBudgetHint(false);
                 }}
                 onBlur={(e) => {
                   field.onBlur();
+                  // Only check and show the hint after the user has finished typing
                   const value = Number(e.target.value.replace(/[^0-9]/g, ''));
                   setShowBudgetHint(value > 0 && value < minBudget);
                 }}
