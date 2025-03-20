@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -25,7 +26,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Clock, MapPin, Music, Star, Users, Calendar as CalendarIcon, Instagram, ExternalLink, ArrowRight } from "lucide-react";
+import { Clock, MapPin, Music, Users, Calendar as CalendarIcon, Instagram, ExternalLink, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
@@ -197,7 +198,7 @@ const ArtistProfile = () => {
                   <ArrowRight className="ml-1 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#1A1A1A] border-gray-800 text-white max-w-xl">
+              <DialogContent className="bg-[#1A1A1A] border-gray-800 text-white max-w-xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-gotham-bold">Book {artistData.name}</DialogTitle>
                   <DialogDescription className="text-gray-400">
@@ -501,7 +502,7 @@ const BookingForm = ({
 }) => {
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         {/* Event Type */}
         <FormField
           control={form.control}
@@ -514,16 +515,16 @@ const BookingForm = ({
                 defaultValue={field.value}
               >
                 <FormControl>
-                  <SelectTrigger className="bg-[#232323] border-gray-700">
+                  <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
                     <SelectValue placeholder="Select event type" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="bg-[#232323] border-gray-700">
-                  <SelectItem value="wedding">Wedding</SelectItem>
-                  <SelectItem value="corporate">Corporate Event</SelectItem>
-                  <SelectItem value="birthday">Birthday Party</SelectItem>
-                  <SelectItem value="private">Private Gathering</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                <SelectContent className="bg-[#232323] border-gray-700 text-white">
+                  <SelectItem value="wedding" className="text-white">Wedding</SelectItem>
+                  <SelectItem value="corporate" className="text-white">Corporate Event</SelectItem>
+                  <SelectItem value="birthday" className="text-white">Birthday Party</SelectItem>
+                  <SelectItem value="private" className="text-white">Private Gathering</SelectItem>
+                  <SelectItem value="other" className="text-white">Other</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -531,7 +532,7 @@ const BookingForm = ({
           )}
         />
 
-        {/* Event Date */}
+        {/* Event Date - Compact Calendar */}
         <FormField
           control={form.control}
           name="eventDate"
@@ -548,11 +549,18 @@ const BookingForm = ({
                       setSelectedDate(date);
                     }}
                     disabled={isDateUnavailable}
-                    className="bg-[#232323]"
+                    className="bg-[#232323] text-white"
+                    classNames={{
+                      caption_label: "text-white",
+                      day: "text-gray-200",
+                      day_selected: "bg-orange-500",
+                      day_disabled: "text-gray-600 hover:bg-transparent",
+                      head_cell: "text-orange-400",
+                    }}
                   />
                 </div>
               </FormControl>
-              <FormDescription className="text-gray-400">
+              <FormDescription className="text-gray-400 text-xs">
                 Red dates are unavailable.
               </FormDescription>
               <FormMessage />
@@ -573,7 +581,7 @@ const BookingForm = ({
                     <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
                       placeholder="Estimated guests"
-                      className="bg-[#232323] border-gray-700 pl-10"
+                      className="bg-[#232323] border-gray-700 pl-10 text-white"
                       {...field}
                     />
                   </div>
@@ -595,19 +603,19 @@ const BookingForm = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-[#232323] border-gray-700">
+                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
                       <div className="flex items-center">
                         <Clock className="mr-2 h-4 w-4 text-gray-400" />
                         <SelectValue placeholder="Select duration" />
                       </div>
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-[#232323] border-gray-700">
-                    <SelectItem value="1hour">1 hour</SelectItem>
-                    <SelectItem value="2hours">2 hours</SelectItem>
-                    <SelectItem value="3hours">3 hours</SelectItem>
-                    <SelectItem value="4hours">4 hours</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
+                  <SelectContent className="bg-[#232323] border-gray-700 text-white">
+                    <SelectItem value="1hour" className="text-white">1 hour</SelectItem>
+                    <SelectItem value="2hours" className="text-white">2 hours</SelectItem>
+                    <SelectItem value="3hours" className="text-white">3 hours</SelectItem>
+                    <SelectItem value="4hours" className="text-white">4 hours</SelectItem>
+                    <SelectItem value="custom" className="text-white">Custom</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -629,22 +637,22 @@ const BookingForm = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-[#232323] border-gray-700">
+                    <SelectTrigger className="bg-[#232323] border-gray-700 text-white">
                       <div className="flex items-center">
                         <MapPin className="mr-2 h-4 w-4 text-gray-400" />
                         <SelectValue placeholder="Select location" />
                       </div>
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-[#232323] border-gray-700">
-                    <SelectItem value="dubai">Dubai</SelectItem>
-                    <SelectItem value="abudhabi">Abu Dhabi</SelectItem>
-                    <SelectItem value="sharjah">Sharjah</SelectItem>
-                    <SelectItem value="riyadh">Riyadh</SelectItem>
-                    <SelectItem value="jeddah">Jeddah</SelectItem>
-                    <SelectItem value="qatar">Qatar</SelectItem>
-                    <SelectItem value="cairo">Cairo</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                  <SelectContent className="bg-[#232323] border-gray-700 text-white">
+                    <SelectItem value="dubai" className="text-white">Dubai</SelectItem>
+                    <SelectItem value="abudhabi" className="text-white">Abu Dhabi</SelectItem>
+                    <SelectItem value="sharjah" className="text-white">Sharjah</SelectItem>
+                    <SelectItem value="riyadh" className="text-white">Riyadh</SelectItem>
+                    <SelectItem value="jeddah" className="text-white">Jeddah</SelectItem>
+                    <SelectItem value="qatar" className="text-white">Qatar</SelectItem>
+                    <SelectItem value="cairo" className="text-white">Cairo</SelectItem>
+                    <SelectItem value="other" className="text-white">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -664,7 +672,7 @@ const BookingForm = ({
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
                     <Input
                       placeholder="Enter your budget"
-                      className="bg-[#232323] border-gray-700 pl-8"
+                      className="bg-[#232323] border-gray-700 pl-8 text-white"
                       {...field}
                     />
                   </div>
@@ -675,7 +683,7 @@ const BookingForm = ({
           />
         </div>
 
-        {/* Additional Info */}
+        {/* Additional Info - Smaller textarea */}
         <FormField
           control={form.control}
           name="additionalInfo"
@@ -685,7 +693,7 @@ const BookingForm = ({
               <FormControl>
                 <Textarea
                   placeholder="Any special requests or details about your event"
-                  className="resize-none bg-[#232323] border-gray-700 min-h-24"
+                  className="resize-none bg-[#232323] border-gray-700 h-16 text-white"
                   {...field}
                 />
               </FormControl>
@@ -695,7 +703,7 @@ const BookingForm = ({
         />
 
         {/* Submit Button */}
-        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 py-6">
+        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 py-4">
           Submit Booking Request
         </Button>
       </form>
@@ -704,4 +712,3 @@ const BookingForm = ({
 };
 
 export default ArtistProfile;
-
