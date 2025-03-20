@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { Clock, MapPin, Users, CalendarIcon, Info } from "lucide-react";
@@ -66,15 +65,13 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 </FormControl>
                 <SelectContent className="bg-[#232323] border-gray-700 text-white">
                   <SelectItem value="private" className="text-white">Private event</SelectItem>
-                  <SelectItem value="wedding" className="text-white">Weddings</SelectItem>
+                  <SelectItem value="wedding" className="text-white">Wedding</SelectItem>
                   <SelectItem value="corporate" className="text-white">Corporate events</SelectItem>
-                  <SelectItem value="festival" className="text-white">Festivals (Organized by promoters)</SelectItem>
-                  <SelectItem value="conference" className="text-white">Conferences</SelectItem>
-                  <SelectItem value="government" className="text-white">Government events</SelectItem>
-                  <SelectItem value="bar" className="text-white">Bar deals/ club deals</SelectItem>
-                  <SelectItem value="advertising" className="text-white">Advertising deals</SelectItem>
-                  <SelectItem value="appearance" className="text-white">Appearances</SelectItem>
-                  <SelectItem value="influencer" className="text-white">Influencer marketing</SelectItem>
+                  <SelectItem value="festival" className="text-white">Festival / Concert</SelectItem>
+                  <SelectItem value="conference" className="text-white">Conference</SelectItem>
+                  <SelectItem value="bar" className="text-white">Bar / Club</SelectItem>
+                  <SelectItem value="advertising" className="text-white">Advertising / Influencer Marketing</SelectItem>
+                  <SelectItem value="appearance" className="text-white">Special Appearance</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
