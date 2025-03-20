@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,6 +18,7 @@ import BasicInfoTab from "@/components/artists/tabs/BasicInfoTab";
 import MediaTab from "@/components/artists/tabs/MediaTab";
 import PricingTab from "@/components/artists/tabs/PricingTab";
 import SettingsTab from "@/components/artists/tabs/SettingsTab";
+import AvailabilityTab from "@/components/artists/tabs/AvailabilityTab";
 
 // Validation schema
 const formSchema = z.object({
@@ -55,7 +55,6 @@ const EditArtist = () => {
   const [tags, setTags] = useState<ArtistTags[]>([]);
   const [activeTab, setActiveTab] = useState("basic");
   
-  // New pricing state
   const [pricingMatrix, setPricingMatrix] = useState<PricingMatrix>({
     default: 0,
     eventTypes: {},
@@ -63,7 +62,8 @@ const EditArtist = () => {
     specific: {}
   });
 
-  // Initialize the form
+  const [blockedDates, setBlockedDates] = useState<Date[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,18 +92,14 @@ const EditArtist = () => {
     },
   });
 
-  // Fetch artist data
   useEffect(() => {
     if (id) {
-      // In a real app, this would be an API call
       const foundArtist = mockArtists.find(a => a.id === id);
       
       if (foundArtist) {
-        // Cast to ExtendedArtist
         const extendedArtist = foundArtist as ExtendedArtist;
         setArtist(extendedArtist);
         
-        // Add socialLinks to the found artist if it doesn't exist
         const artistWithSocialLinks = {
           ...extendedArtist,
           socialLinks: extendedArtist.socialLinks || {
@@ -114,7 +110,6 @@ const EditArtist = () => {
           }
         };
         
-        // Set form default values
         form.reset({
           name: artistWithSocialLinks.name,
           nameAr: artistWithSocialLinks.nameAr,
@@ -135,7 +130,6 @@ const EditArtist = () => {
           socialLinks: artistWithSocialLinks.socialLinks,
         });
         
-        // Initialize sample pricing matrix
         setPricingMatrix({
           default: artistWithSocialLinks.minimumBid,
           eventTypes: {
@@ -153,31 +147,33 @@ const EditArtist = () => {
           }
         });
         
-        // Initialize sample tags
         setTags([
           { id: "1", name: "Live Performance", nameAr: "أداء حي" },
           { id: "2", name: "Studio Recording", nameAr: "تسجيل استوديو" }
         ]);
+        
+        const sampleBlockedDates = [
+          new Date(new Date().getFullYear(), new Date().getMonth(), 15),
+          new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+        ];
+        setBlockedDates(sampleBlockedDates);
       } else {
         toast.error(t("Artist not found", "لم يتم العثور على الفنان"));
         navigate("/artists");
       }
     } else {
-      // New artist case
-      // In this mockup, we'll redirect to the artists page if no ID is provided
       navigate("/artists");
     }
     
     setLoading(false);
-    // Set document title
     document.title = id ? `Edit Artist | Artist Booking Platform` : `Add New Artist | Artist Booking Platform`;
   }, [id, navigate, t, form]);
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    // In a real app, this would be an API call
     console.log("Form values:", values);
     console.log("Pricing matrix:", pricingMatrix);
     console.log("Tags:", tags);
+    console.log("Blocked dates:", blockedDates);
     
     toast.success(t("Artist information updated successfully", "تم تحديث معلومات الفنان بنجاح"));
   };
@@ -251,7 +247,7 @@ const EditArtist = () => {
               <form onSubmit={form.handleSubmit(handleSubmit)}>
                 <div className="flex flex-col gap-8">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid grid-cols-4 w-full max-w-2xl mb-8">
+                    <TabsList className="grid grid-cols-5 w-full max-w-2xl mb-8">
                       <TabsTrigger value="basic">
                         {t("Basic Info", "معلومات أساسية")}
                       </TabsTrigger>
@@ -261,12 +257,14 @@ const EditArtist = () => {
                       <TabsTrigger value="pricing">
                         {t("Pricing", "التسعير")}
                       </TabsTrigger>
+                      <TabsTrigger value="availability">
+                        {t("Availability", "التوفر")}
+                      </TabsTrigger>
                       <TabsTrigger value="settings">
                         {t("Settings", "الإعدادات")}
                       </TabsTrigger>
                     </TabsList>
                     
-                    {/* Basic Info Tab */}
                     <TabsContent value="basic">
                       <BasicInfoTab 
                         form={form}
@@ -276,12 +274,10 @@ const EditArtist = () => {
                       />
                     </TabsContent>
                     
-                    {/* Media Tab */}
                     <TabsContent value="media">
                       <MediaTab form={form} />
                     </TabsContent>
                     
-                    {/* Pricing Tab */}
                     <TabsContent value="pricing">
                       <PricingTab 
                         form={form} 
@@ -290,7 +286,14 @@ const EditArtist = () => {
                       />
                     </TabsContent>
                     
-                    {/* Settings Tab */}
+                    <TabsContent value="availability">
+                      <AvailabilityTab 
+                        form={form}
+                        blockedDates={blockedDates}
+                        setBlockedDates={setBlockedDates}
+                      />
+                    </TabsContent>
+                    
                     <TabsContent value="settings">
                       <SettingsTab form={form} />
                     </TabsContent>
