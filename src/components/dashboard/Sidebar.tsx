@@ -13,7 +13,8 @@ import {
   Sun,
   Menu,
   X,
-  Palette
+  Palette,
+  User
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -167,6 +168,15 @@ const Sidebar = ({ className }: SidebarProps) => {
             </div>
             <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
           </div>
+          
+          {/* Artist Profile Link */}
+          <Link 
+            to="/artist-profile" 
+            className="flex w-full items-center gap-2 px-3 py-2 text-sm font-gotham-book rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+          >
+            <User className="h-4 w-4" />
+            <span>{language === "ar" ? "صفحة الفنان" : "Artist Profile"}</span>
+          </Link>
           
           {/* Artist Dashboard Link */}
           <Link 
