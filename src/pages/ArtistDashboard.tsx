@@ -20,7 +20,7 @@ const ArtistDashboard = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-72">
         <Header />
         
         <div className="flex-1 container py-6 md:py-8 space-y-6">
