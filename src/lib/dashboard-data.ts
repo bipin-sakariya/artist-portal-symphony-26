@@ -1,3 +1,4 @@
+
 // Mock data for the dashboard
 
 export type Artist = {
@@ -53,6 +54,7 @@ export type AnalyticsDashboard = {
   rejectedBookingRequests: number;
   totalArtists: number;
   pendingArtistApprovals: number;
+  activeUsers: number; // Added activeUsers property
   totalRevenue: number;
   currency: string;
   topArtists: Array<{
@@ -292,6 +294,7 @@ export const analyticsDashboard: AnalyticsDashboard = {
   rejectedBookingRequests: 7,
   totalArtists: 24,
   pendingArtistApprovals: 5,
+  activeUsers: 156, // Added activeUsers value
   totalRevenue: 358000,
   currency: "USD",
   topArtists: [

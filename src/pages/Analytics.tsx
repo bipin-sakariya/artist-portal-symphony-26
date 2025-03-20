@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
@@ -77,7 +76,6 @@ const Analytics = () => {
                 title={t("Total Booking Requests", "إجمالي طلبات الحجز")}
                 value={analyticsDashboard.totalBookingRequests}
                 icon={TicketCheck}
-                trend={{ value: 12, isPositive: true }}
                 description={t("since last month", "منذ الشهر الماضي")}
               />
               
@@ -85,7 +83,6 @@ const Analytics = () => {
                 title={t("Total Artists", "إجمالي الفنانين")}
                 value={analyticsDashboard.totalArtists}
                 icon={Music}
-                trend={{ value: 5, isPositive: true }}
                 description={t("since last month", "منذ الشهر الماضي")}
               />
               
@@ -93,7 +90,6 @@ const Analytics = () => {
                 title={t("Confirmation Rate", "معدل التأكيد")}
                 value={`${Math.round((analyticsDashboard.confirmedBookingRequests / analyticsDashboard.totalBookingRequests) * 100)}%`}
                 icon={Percent}
-                trend={{ value: 8, isPositive: true }}
                 description={t("since last month", "منذ الشهر الماضي")}
               />
               
@@ -101,7 +97,6 @@ const Analytics = () => {
                 title={t("Total Revenue", "إجمالي الإيرادات")}
                 value={`${analyticsDashboard.totalRevenue.toLocaleString()} ${analyticsDashboard.currency}`}
                 icon={DollarSign}
-                trend={{ value: 18, isPositive: true }}
                 description={t("since last month", "منذ الشهر الماضي")}
                 valueClassName="text-primary"
               />
