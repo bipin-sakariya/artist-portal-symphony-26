@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/hooks/use-language";
 import { Artist } from "@/lib/dashboard-data";
 import { CheckCircle, ChevronRight, Edit, Star, XCircle } from "lucide-react";
@@ -44,8 +43,19 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
     navigate(`/artists/edit/${artist.id}`);
   };
 
+  const handleCardClick = () => {
+    navigate(`/artists/edit/${artist.id}`);
+    
+    if (onClick) {
+      onClick(artist);
+    }
+  };
+
   return (
-    <div className="glass-card overflow-hidden transition-all hover:shadow-elevated cursor-pointer group" onClick={() => onClick?.(artist)}>
+    <div 
+      className="glass-card overflow-hidden transition-all hover:shadow-elevated cursor-pointer group" 
+      onClick={handleCardClick}
+    >
       <div className="h-32 overflow-hidden relative">
         <img
           src={artist.coverImage}
