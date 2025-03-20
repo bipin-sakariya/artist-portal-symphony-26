@@ -416,31 +416,7 @@ const ArtistProfile = () => {
               </Card>
 
               {/* Contact Information */}
-              <Card className="bg-[#181818] border-gray-800 animate-fade-in">
-                <CardContent className="p-6 space-y-4">
-                  <h2 className="text-2xl font-gotham-bold text-white">Contact for Bookings</h2>
-                  <div className="space-y-3 text-gray-300">
-                    <p className="flex items-center gap-2">
-                      <MapPin size={18} className="text-orange-400" />
-                      <span>{artistData.location}</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400">
-                        <rect width="20" height="16" x="2" y="4" rx="2" />
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                      </svg>
-                      <span>+971 50 123 4567</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400">
-                        <rect width="20" height="16" x="2" y="4" rx="2" />
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                      </svg>
-                      <span>booking@sarahjohnson.com</span>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              
             </div>
           </div>
         </div>
@@ -451,7 +427,7 @@ const ArtistProfile = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
-              <h3 className="text-xl font-gotham-bold text-white">Sarah Johnson</h3>
+              
               <p className="text-gray-400">Soulful Jazz Vocalist & Pianist</p>
             </div>
             
@@ -471,7 +447,7 @@ const ArtistProfile = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} Sarah Johnson. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
           </div>
         </div>
       </footer>
