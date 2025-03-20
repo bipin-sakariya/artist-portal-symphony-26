@@ -14,6 +14,9 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Select,
   SelectContent,
   SelectItem,
@@ -423,7 +426,8 @@ const ArtistProfile = () => {
                     </p>
                     <p className="flex items-center gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                       </svg>
                       <span>+971 50 123 4567</span>
                     </p>
@@ -531,15 +535,33 @@ const BookingForm = ({
           )}
         />
 
-        {/* Event Date - Compact Calendar */}
+        {/* Event Date - Dropdown Calendar */}
         <FormField
           control={form.control}
           name="eventDate"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel className="text-white">Event Date</FormLabel>
-              <FormControl>
-                <div className="bg-[#232323] border border-gray-700 rounded-md p-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      className={`w-full flex items-center justify-between bg-[#232323] border-gray-700 text-white hover:bg-[#2a2a2a] hover:text-white ${!field.value && "text-gray-400"}`}
+                    >
+                      <div className="flex items-center">
+                        <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Select date</span>
+                        )}
+                      </div>
+                      <div className="opacity-60">▼</div>
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-[#232323] border-gray-700">
                   <Calendar
                     mode="single"
                     selected={field.value}
@@ -548,20 +570,21 @@ const BookingForm = ({
                       setSelectedDate(date);
                     }}
                     disabled={isDateUnavailable}
-                    className="bg-[#232323] text-white"
+                    className="bg-[#232323] text-white pointer-events-auto"
                     classNames={{
                       caption_label: "text-white",
                       day: "text-gray-200",
                       day_selected: "bg-orange-500",
                       day_disabled: "text-gray-600 hover:bg-transparent",
                       head_cell: "text-orange-400",
+                      nav_button: "opacity-100 text-white hover:bg-gray-700",
                     }}
                   />
-                </div>
-              </FormControl>
-              <FormDescription className="text-gray-400 text-xs">
-                Red dates are unavailable.
-              </FormDescription>
+                  <div className="p-2 border-t border-gray-700 text-xs text-orange-400">
+                    Red dates are unavailable
+                  </div>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
