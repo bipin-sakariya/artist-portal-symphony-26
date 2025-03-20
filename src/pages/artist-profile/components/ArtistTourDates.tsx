@@ -28,7 +28,10 @@ const ArtistTourDates: React.FC = () => {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-orange-400 font-gotham-bold">{tour.date}</span>
-              <Button variant="outline" className="border-orange-500 text-orange-400 hover:bg-orange-500/10">
+              <Button 
+                variant="default" 
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
                 Details
               </Button>
             </div>
