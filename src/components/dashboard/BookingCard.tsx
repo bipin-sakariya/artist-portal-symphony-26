@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/hooks/use-language";
 import { BookingRequest } from "@/lib/dashboard-data";
 import { Badge } from "@/components/ui/badge";
@@ -54,15 +53,10 @@ const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => 
     }
   };
 
-  // Display booking amount in USD with higher values
   const displayAmount = () => {
-    // Generate a random value between 20,000 and 150,000
-    const minValue = 20000;
-    const maxValue = 150000;
-    // Scale the booking budget to be between minValue and maxValue
-    // booking.budget is typically between 0-15, so we divide the range
-    const amount = Math.floor(minValue + (booking.budget / 15) * (maxValue - minValue));
-    return `$${amount.toLocaleString()}`;
+    const amounts = [70000, 80000, 100000];
+    const index = booking.id.charCodeAt(0) % amounts.length;
+    return `$${amounts[index].toLocaleString()}`;
   };
 
   return (

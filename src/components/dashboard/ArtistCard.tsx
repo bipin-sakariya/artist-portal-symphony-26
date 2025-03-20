@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/hooks/use-language";
 import { Artist } from "@/lib/dashboard-data";
 import { CheckCircle, ChevronRight, Edit, Star, XCircle } from "lucide-react";
@@ -52,15 +51,10 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
     }
   };
 
-  // Display artist minimum bid in USD with higher values
   const displayAmount = () => {
-    // Generate a random value between 20,000 and 150,000
-    const minValue = 20000;
-    const maxValue = 150000;
-    // Scale the artist's minimum bid to be between minValue and maxValue
-    // artist.minimumBid is typically between 0-15, so we divide the range
-    const amount = Math.floor(minValue + (artist.minimumBid / 15) * (maxValue - minValue));
-    return `$${amount.toLocaleString()}`;
+    const amounts = [70000, 80000, 100000];
+    const index = artist.id.charCodeAt(0) % amounts.length;
+    return `$${amounts[index].toLocaleString()}`;
   };
 
   return (
