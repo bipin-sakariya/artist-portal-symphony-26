@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
@@ -15,11 +16,39 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Dashboard = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Get sidebar state from localStorage
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    return savedState ? JSON.parse(savedState) : false;
+  });
   
   useEffect(() => {
     // Set document title
     document.title = "Dashboard | Artist Booking Platform";
-  }, []);
+    
+    // Add event listener to track sidebar state changes in localStorage
+    const handleStorageChange = () => {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      if (savedState) {
+        setIsCollapsed(JSON.parse(savedState));
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check for changes directly every 500ms (for same-window changes)
+    const interval = setInterval(() => {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      if (savedState && JSON.parse(savedState) !== isCollapsed) {
+        setIsCollapsed(JSON.parse(savedState));
+      }
+    }, 500);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [isCollapsed]);
 
   // Update the pendingArtistApprovals count to 1 to match the actual data
   const dashboardData = {
@@ -31,7 +60,7 @@ const Dashboard = () => {
     <div className="min-h-screen flex w-full">
       <Sidebar />
       
-      <div className="flex-1 ml-72 max-w-[calc(100%-18rem)]">
+      <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'ml-16' : 'ml-72'} ${isCollapsed ? 'max-w-[calc(100%-4rem)]' : 'max-w-[calc(100%-18rem)]'}`}>
         <Header />
         
         <PageTransition>

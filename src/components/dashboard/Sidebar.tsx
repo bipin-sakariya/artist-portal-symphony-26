@@ -116,14 +116,14 @@ const Sidebar = ({ className }: SidebarProps) => {
     </button>
   );
 
-  // Collapse toggle button
+  // Collapse toggle button - moved slightly lower on the sidebar
   const CollapseButton = () => (
     <Button
       onClick={toggleCollapse}
       variant="ghost"
       size="icon"
       className={cn(
-        "absolute -right-3 top-20 z-40 h-6 w-6 rounded-full border bg-background shadow-md",
+        "absolute -right-3 top-32 z-40 h-6 w-6 rounded-full border bg-background shadow-md",
         isRTL ? "rotate-180" : ""
       )}
       aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
