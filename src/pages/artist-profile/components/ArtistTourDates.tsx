@@ -26,7 +26,7 @@ const ArtistTourDates: React.FC = () => {
                 <p className="text-gray-400">{tour.location}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4">
               <span className="text-orange-400 font-gotham-bold">{tour.date}</span>
               <Button 
                 variant="default" 
