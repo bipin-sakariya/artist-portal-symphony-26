@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 
 interface PageTransitionProps {
   children: React.ReactNode;
+  className?: string; // Added className prop to interface
 }
 
-const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
+const PageTransition: React.FC<PageTransitionProps> = ({ children, className }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -18,7 +19,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
         damping: 20,
         duration: 0.3
       }}
-      className="w-full h-full"
+      className={`w-full h-full ${className || ""}`}
     >
       {children}
     </motion.div>
