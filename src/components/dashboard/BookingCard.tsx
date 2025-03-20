@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/hooks/use-language";
 import { BookingRequest } from "@/lib/dashboard-data";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,7 @@ import BookingDetailsDialog from "./BookingDetailsDialog";
 interface BookingCardProps {
   booking: BookingRequest;
   onClick?: (booking: BookingRequest) => void;
-  onStatusChange?: (bookingId: string, newStatus: string) => void;
+  onStatusChange?: (bookingId: string, newStatus: 'pending' | 'approved' | 'rejected' | 'completed') => void;
 }
 
 const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => {
@@ -47,7 +48,7 @@ const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => 
     setIsDialogOpen(true);
   };
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: 'pending' | 'approved' | 'rejected' | 'completed') => {
     if (onStatusChange) {
       onStatusChange(booking.id, newStatus);
     }

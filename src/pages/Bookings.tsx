@@ -75,7 +75,7 @@ const Bookings = () => {
     // This will now be handled by the BookingDetailsDialog component
   };
   
-  const handleStatusChange = (bookingId: string, newStatus: string) => {
+  const handleStatusChange = (bookingId: string, newStatus: 'pending' | 'approved' | 'rejected' | 'completed') => {
     // Update local bookings state
     const updatedBookings = bookings.map(booking => 
       booking.id === bookingId ? {...booking, status: newStatus} : booking

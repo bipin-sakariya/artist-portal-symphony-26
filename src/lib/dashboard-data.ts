@@ -1,4 +1,3 @@
-
 // Mock data for the dashboard
 
 export type Artist = {
@@ -43,6 +42,7 @@ export type BookingRequest = {
   currency: string;
   status: 'pending' | 'approved' | 'rejected' | 'completed';
   createdAt: string;
+  specialRequirements?: string;
   notes?: string;
 };
 
@@ -206,6 +206,7 @@ export const bookingRequests: BookingRequest[] = [
     currency: "AED",
     status: "pending",
     createdAt: "2023-11-01",
+    specialRequirements: "Need a stage of at least 4x6 meters. Early setup by 3 PM required.",
     notes: "Annual corporate gala dinner"
   },
   {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { BookingRequest } from "@/lib/dashboard-data";
@@ -22,7 +21,6 @@ import {
   Check,
   X
 } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -31,7 +29,7 @@ interface BookingDetailsDialogProps {
   booking: BookingRequest;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onStatusChange?: (newStatus: string) => void;
+  onStatusChange?: (newStatus: 'pending' | 'approved' | 'rejected' | 'completed') => void;
 }
 
 const BookingDetailsDialog = ({
@@ -41,7 +39,7 @@ const BookingDetailsDialog = ({
   onStatusChange,
 }: BookingDetailsDialogProps) => {
   const { t, language } = useLanguage();
-  const [status, setStatus] = useState(booking.status);
+  const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | 'completed'>(booking.status);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -112,7 +110,6 @@ const BookingDetailsDialog = ({
         </DialogHeader>
 
         <div className="grid gap-6 py-4">
-          {/* Status and Artist Name */}
           <div className="flex items-start justify-between">
             <div>
               <Badge
@@ -145,7 +142,6 @@ const BookingDetailsDialog = ({
             </div>
           </div>
 
-          {/* Customer Info */}
           <Card className="border-muted">
             <CardContent className="p-4 space-y-3">
               <h4 className="font-semibold text-sm text-muted-foreground">
@@ -171,7 +167,6 @@ const BookingDetailsDialog = ({
             </CardContent>
           </Card>
 
-          {/* Event Details */}
           <Card className="border-muted">
             <CardContent className="p-4 space-y-3">
               <h4 className="font-semibold text-sm text-muted-foreground">
@@ -212,7 +207,6 @@ const BookingDetailsDialog = ({
             </CardContent>
           </Card>
 
-          {/* Special Requirements */}
           {booking.specialRequirements && (
             <Card className="border-muted">
               <CardContent className="p-4 space-y-2">
