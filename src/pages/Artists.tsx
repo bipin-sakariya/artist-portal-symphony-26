@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
@@ -14,7 +15,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Artists = () => {
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState("all");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState(tabFromQuery || "all");
   const [artists, setArtists] = useState<Artist[]>(mockArtists);
   const [filteredArtists, setFilteredArtists] = useState<Artist[]>(mockArtists);
   const [searchValue, setSearchValue] = useState("");
@@ -24,6 +29,13 @@ const Artists = () => {
     // Set document title
     document.title = "Artists Management | Artist Booking Platform";
   }, []);
+  
+  // Update activeTab when URL query parameter changes
+  useEffect(() => {
+    if (tabFromQuery && ['all', 'approved', 'pending', 'rejected'].includes(tabFromQuery)) {
+      setActiveTab(tabFromQuery);
+    }
+  }, [tabFromQuery]);
   
   useEffect(() => {
     // Apply filters and search
@@ -39,11 +51,8 @@ const Artists = () => {
       const lowerCaseSearch = searchValue.toLowerCase();
       filtered = filtered.filter(artist => 
         artist.name.toLowerCase().includes(lowerCaseSearch) || 
-        artist.nameAr.includes(lowerCaseSearch) ||
         artist.genre.toLowerCase().includes(lowerCaseSearch) ||
-        artist.genreAr.includes(lowerCaseSearch) ||
-        artist.location.toLowerCase().includes(lowerCaseSearch) ||
-        artist.locationAr.includes(lowerCaseSearch)
+        artist.location.toLowerCase().includes(lowerCaseSearch)
       );
     }
     
@@ -80,11 +89,11 @@ const Artists = () => {
   };
   
   const handleSelectArtist = (artist: Artist) => {
-    toast.info(t(`Selected artist: ${artist.name}`, `تم اختيار الفنان: ${artist.nameAr}`));
+    toast.info(`Selected artist: ${artist.name}`);
   };
   
   const handleAddArtist = () => {
-    toast.info(t("Add new artist functionality to be implemented", "سيتم تنفيذ وظيفة إضافة فنان جديد"));
+    toast.info("Add new artist functionality to be implemented");
   };
   
   // Filter configurations
@@ -118,6 +127,20 @@ const Artists = () => {
     }
   };
 
+  // Update URL when tab changes
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    
+    // Update URL query parameter
+    const newUrl = new URL(window.location.href);
+    if (value === "all") {
+      newUrl.searchParams.delete('tab');
+    } else {
+      newUrl.searchParams.set('tab', value);
+    }
+    window.history.pushState({}, '', newUrl.toString());
+  };
+
   return (
     <div className="min-h-screen flex w-full">
       <Sidebar />
@@ -129,9 +152,9 @@ const Artists = () => {
           <main className="p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <div>
-                <h2 className="text-xl font-semibold mb-1">{t("Artist Management", "إدارة الفنانين")}</h2>
+                <h2 className="text-xl font-semibold mb-1">{t("Artist Management", "")}</h2>
                 <p className="text-muted-foreground">
-                  {t("Manage all artists on the platform", "إدارة جميع الفنانين على المنصة")}
+                  {t("Manage all artists on the platform", "")}
                 </p>
               </div>
               
@@ -140,13 +163,13 @@ const Artists = () => {
                 onClick={handleAddArtist}
               >
                 <PlusCircle className="h-4 w-4" />
-                <span>{t("Add New Artist", "إضافة فنان جديد")}</span>
+                <span>{t("Add New Artist", "")}</span>
               </Button>
             </div>
             
             <div className="mb-6">
               <SearchFilter 
-                placeholder={t("Search artists by name, genre, location...", "البحث عن فنانين حسب الاسم أو النوع أو الموقع...")}
+                placeholder={t("Search artists by name, genre, location...", "")}
                 onChange={handleSearchChange}
                 onFilter={handleFilterChange}
                 filters={filterOptions}
@@ -155,21 +178,21 @@ const Artists = () => {
             
             <Tabs 
               value={activeTab} 
-              onValueChange={setActiveTab}
+              onValueChange={handleTabChange}
               className="mb-6"
             >
               <TabsList>
-                <TabsTrigger value="all">{t("All Artists", "جميع الفنانين")}</TabsTrigger>
-                <TabsTrigger value="approved">{t("Approved", "معتمد")}</TabsTrigger>
-                <TabsTrigger value="pending">{t("Pending", "قيد الانتظار")}</TabsTrigger>
-                <TabsTrigger value="rejected">{t("Rejected", "مرفوض")}</TabsTrigger>
+                <TabsTrigger value="all">{t("All Artists", "")}</TabsTrigger>
+                <TabsTrigger value="approved">{t("Approved", "")}</TabsTrigger>
+                <TabsTrigger value="pending">{t("Pending", "")}</TabsTrigger>
+                <TabsTrigger value="rejected">{t("Rejected", "")}</TabsTrigger>
               </TabsList>
             </Tabs>
             
             {filteredArtists.length === 0 ? (
               <div className="glass-card p-12 text-center">
                 <p className="text-muted-foreground">
-                  {t("No artists found matching your criteria", "لم يتم العثور على فنانين مطابقين لمعاييرك")}
+                  {t("No artists found matching your criteria", "")}
                 </p>
               </div>
             ) : (

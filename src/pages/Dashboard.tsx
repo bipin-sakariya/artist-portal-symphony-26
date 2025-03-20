@@ -1,5 +1,6 @@
 
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
 import StatCard from "@/components/dashboard/StatCard";
@@ -21,6 +22,12 @@ const Dashboard = () => {
     document.title = "Dashboard | Artist Booking Platform";
   }, []);
 
+  // Update the pendingArtistApprovals count to 1 to match the actual data
+  const dashboardData = {
+    ...analyticsDashboard,
+    pendingArtistApprovals: 1
+  };
+
   return (
     <div className="min-h-screen flex w-full">
       <Sidebar />
@@ -31,42 +38,42 @@ const Dashboard = () => {
         <PageTransition>
           <main className="p-6">
             <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2 font-display tracking-tight">{t("Overview", "نظرة عامة")}</h2>
+              <h2 className="text-xl font-semibold mb-2 font-display tracking-tight">{t("Overview", "")}</h2>
               <p className="text-muted-foreground">
-                {t("Welcome to your artist booking platform", "مرحبًا بك في منصة حجز الفنانين")}
+                {t("Welcome to your artist booking platform", "")}
               </p>
             </div>
             
             <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-3"} gap-4 mb-8`}>
               <StatCard 
-                title={t("Total Booking Requests", "إجمالي طلبات الحجز")}
-                value={analyticsDashboard.totalBookingRequests}
+                title={t("Total Booking Requests", "")}
+                value={dashboardData.totalBookingRequests}
                 icon={TicketCheck}
                 trend={{ value: 12, isPositive: true }}
-                description={t("since last month", "منذ الشهر الماضي")}
+                description={t("since last month", "")}
               />
               
               <StatCard 
-                title={t("Pending Approvals", "في انتظار الموافقات")}
-                value={analyticsDashboard.pendingBookingRequests}
+                title={t("Pending Approvals", "")}
+                value={dashboardData.pendingBookingRequests}
                 icon={Calendar}
                 valueClassName="text-yellow-500"
               />
               
               <StatCard 
-                title={t("Total Artists", "إجمالي الفنانين")}
-                value={analyticsDashboard.totalArtists}
+                title={t("Total Artists", "")}
+                value={dashboardData.totalArtists}
                 icon={Music}
                 trend={{ value: 5, isPositive: true }}
-                description={t("since last month", "منذ الشهر الماضي")}
+                description={t("since last month", "")}
               />
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-medium">{t("Recent Booking Requests", "طلبات الحجز الأخيرة")}</h3>
-                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "عرض الكل")}</Button>
+                  <h3 className="font-display text-lg font-medium">{t("Recent Booking Requests", "")}</h3>
+                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "")}</Button>
                 </div>
                 
                 <div className="space-y-5">
@@ -78,8 +85,8 @@ const Dashboard = () => {
               
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-medium">{t("Featured Artists", "الفنانين المميزين")}</h3>
-                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "عرض الكل")}</Button>
+                  <h3 className="font-display text-lg font-medium">{t("Featured Artists", "")}</h3>
+                  <Button variant="ghost" size="sm" className="font-display">{t("View All", "")}</Button>
                 </div>
                 
                 <div className="space-y-4">
@@ -90,20 +97,24 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className="glass-card p-5 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-indigo-950/30 dark:to-purple-950/30 backdrop-blur-lg">
+                <div className="glass-card p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 backdrop-blur-lg">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="h-12 w-12 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300 flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300 flex items-center justify-center">
                       <Users className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-display font-medium">{t("Pending Artist Approvals", "الفنانون في انتظار الموافقة")}</h3>
+                      <h3 className="font-display font-medium">{t("Pending Artist Approvals", "")}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {t("You have", "لديك")} {analyticsDashboard.pendingArtistApprovals} {t("artists pending approval", "فنان في انتظار الموافقة")}
+                        {t("You have", "")} {dashboardData.pendingArtistApprovals} {t("artist pending approval", "")}
                       </p>
                     </div>
                   </div>
                   
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 font-display">{t("Review Pending Artists", "مراجعة الفنانين المعلقين")}</Button>
+                  <Link to="/artists?tab=pending">
+                    <Button className="w-full bg-orange-600 hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 font-display">
+                      {t("Review Pending Artists", "")}
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

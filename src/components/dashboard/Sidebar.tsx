@@ -8,12 +8,11 @@ import {
   Users, 
   Calendar, 
   BarChart3, 
-  Settings,
-  Menu,
-  X,
   LogOut,
   Moon,
   Sun,
+  Menu,
+  X
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -23,7 +22,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  const { t, language, setLanguage, isRTL } = useLanguage();
+  const { language, isRTL } = useLanguage();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
@@ -54,10 +53,6 @@ const Sidebar = ({ className }: SidebarProps) => {
     setIsOpen(!isOpen);
   };
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en');
-  };
-
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
@@ -86,13 +81,8 @@ const Sidebar = ({ className }: SidebarProps) => {
       nameEn: "Analytics",
       nameAr: "التحليلات",
       path: "/analytics"
-    },
-    {
-      icon: Settings,
-      nameEn: "Settings",
-      nameAr: "الإعدادات",
-      path: "/settings"
     }
+    // Settings menu item removed
   ];
 
   // Mobile menu button
@@ -136,7 +126,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             </div>
             <div className="flex flex-col">
               <span className="font-gotham-bold text-sidebar-foreground">AMP</span>
-              <span className="text-xs text-muted-foreground">{t("Admin Portal", "بوابة المشرف")}</span>
+              <span className="text-xs text-muted-foreground">Admin Portal</span>
             </div>
           </Link>
         </div>
@@ -157,7 +147,7 @@ const Sidebar = ({ className }: SidebarProps) => {
                   )}
                 >
                   <item.icon className="h-5 w-5 shrink-0" />
-                  <span className="font-gotham-book">{t(item.nameEn, item.nameAr)}</span>
+                  <span className="font-gotham-book">{item.nameEn}</span>
                   
                   {location.pathname === item.path && (
                     <span className="absolute inset-y-0 left-0 w-1 bg-primary rounded-r-full" />
@@ -171,25 +161,17 @@ const Sidebar = ({ className }: SidebarProps) => {
         <div className="border-t p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground font-gotham-book">{t("Dark Mode", "الوضع الداكن")}</span>
+              <span className="text-sm text-muted-foreground font-gotham-book">Dark Mode</span>
               {isDarkMode ? <Moon className="h-4 w-4 text-muted-foreground" /> : <Sun className="h-4 w-4 text-muted-foreground" />}
             </div>
             <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
           </div>
           
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground font-gotham-book">{t("Language", "اللغة")}</span>
-            <button 
-              onClick={toggleLanguage}
-              className="px-2 py-1 text-xs rounded-md border hover:bg-sidebar-accent transition-colors font-gotham-book"
-            >
-              {language === 'en' ? 'العربية' : 'English'}
-            </button>
-          </div>
+          {/* Language toggle removed */}
 
           <button className="flex w-full items-center gap-2 px-3 py-2 text-sm font-gotham-book rounded-lg text-destructive hover:bg-destructive/10 transition-colors">
             <LogOut className="h-4 w-4" />
-            <span>{t("Log Out", "تسجيل الخروج")}</span>
+            <span>Log Out</span>
           </button>
         </div>
       </aside>
