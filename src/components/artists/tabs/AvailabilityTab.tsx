@@ -4,9 +4,10 @@ import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, CalendarX, CalendarCheck } from "lucide-react";
+import { X, CalendarX, CalendarCheck, Trash2 } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 
 interface AvailabilityTabProps {
   form: UseFormReturn<any>;
@@ -16,17 +17,22 @@ interface AvailabilityTabProps {
 
 const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTabProps) => {
   const { t, language } = useLanguage();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
 
   // Disable dates that are already in the blockedDates array
   const disabledDays = blockedDates.map(date => new Date(date));
 
-  // Function to block a date
-  const blockDate = () => {
-    if (selectedDate) {
-      setBlockedDates(prev => [...prev, new Date(selectedDate)]);
-      setSelectedDate(undefined);
+  // Function to block selected dates
+  const blockDates = () => {
+    if (selectedDates.length > 0) {
+      setBlockedDates(prev => [...prev, ...selectedDates.map(date => new Date(date))]);
+      setSelectedDates([]);
     }
+  };
+
+  // Function to clear all selected dates
+  const clearSelectedDates = () => {
+    setSelectedDates([]);
   };
 
   // Function to remove a blocked date
@@ -40,6 +46,21 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     );
   };
 
+  // Function to remove all blocked dates
+  const clearAllBlockedDates = () => {
+    setBlockedDates([]);
+  };
+
+  // Group blocked dates by month for more compact display
+  const groupedBlockedDates = blockedDates.reduce((acc, date) => {
+    const monthYear = format(date, language === "ar" ? "MM/yyyy" : "MMMM yyyy");
+    if (!acc[monthYear]) {
+      acc[monthYear] = [];
+    }
+    acc[monthYear].push(date);
+    return acc;
+  }, {} as Record<string, Date[]>);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -51,37 +72,77 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
         </CardHeader>
         
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-base font-medium mb-4">
-                {t("Select dates to block", "حدد التواريخ للحظر")}
-              </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-base font-medium">
+                  {t("Select dates to block", "حدد التواريخ للحظر")}
+                </h3>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={blockDates} 
+                    disabled={selectedDates.length === 0}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1"
+                  >
+                    <CalendarX className="h-4 w-4" />
+                    {t("Block Selected", "حظر المحدد")}
+                  </Button>
+                  {selectedDates.length > 0 && (
+                    <Button 
+                      onClick={clearSelectedDates}
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                    >
+                      <X className="h-4 w-4" />
+                      {t("Clear", "مسح")}
+                    </Button>
+                  )}
+                </div>
+              </div>
               <div className="border rounded-md p-1">
                 <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
+                  mode="multiple"
+                  selected={selectedDates}
+                  onSelect={setSelectedDates}
                   disabled={disabledDays}
                   className="pointer-events-auto"
                 />
               </div>
-              <div className="mt-4 flex justify-end">
-                <Button 
-                  onClick={blockDate} 
-                  disabled={!selectedDate}
-                  variant="outline"
-                  className="gap-2"
-                >
-                  <CalendarX className="h-4 w-4" />
-                  {t("Block Selected Date", "حظر التاريخ المحدد")}
-                </Button>
-              </div>
+              {selectedDates.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <p className="text-sm text-muted-foreground mr-2 py-1">
+                    {t("Selected dates:", "التواريخ المحددة:")}
+                  </p>
+                  {selectedDates.map((date, i) => (
+                    <Badge key={i} variant="outline" className="gap-1">
+                      {format(date, language === "ar" ? "dd/MM/yyyy" : "MMM d, yyyy")}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
             
-            <div>
-              <h3 className="text-base font-medium mb-4">
-                {t("Currently Blocked Dates", "التواريخ المحظورة حاليًا")}
-              </h3>
+            <div className="lg:col-span-1">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-base font-medium">
+                  {t("Blocked Dates", "التواريخ المحظورة")}
+                </h3>
+                {blockedDates.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearAllBlockedDates}
+                    className="gap-1 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {t("Clear All", "مسح الكل")}
+                  </Button>
+                )}
+              </div>
+              
               {blockedDates.length === 0 ? (
                 <div className="flex items-center justify-center h-64 border rounded-md p-6 bg-muted/30">
                   <div className="text-center text-muted-foreground">
@@ -90,35 +151,41 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                       {t("No blocked dates yet", "لا توجد تواريخ محظورة حتى الآن")}
                     </p>
                     <p className="text-sm mt-2">
-                      {t("Select a date on the calendar to block it", "حدد تاريخًا في التقويم لحظره")}
+                      {t("Select dates on the calendar to block them", "حدد تواريخًا في التقويم لحظرها")}
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="border rounded-md p-4 max-h-[500px] overflow-y-auto">
-                  <ul className="space-y-2">
-                    {blockedDates
-                      .sort((a, b) => a.getTime() - b.getTime())
-                      .map((date, index) => (
-                        <li 
-                          key={index} 
-                          className="flex items-center justify-between p-2 border-b last:border-0"
-                        >
-                          <span className="font-medium">
-                            {format(date, language === "ar" ? "dd/MM/yyyy" : "MMMM dd, yyyy")}
-                          </span>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => removeBlockedDate(date)}
-                            className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
-                          >
-                            <X className="h-4 w-4" />
-                            <span className="sr-only">{t("Remove", "إزالة")}</span>
-                          </Button>
-                        </li>
-                      ))}
-                  </ul>
+                <div className="border rounded-md p-4 h-[500px] overflow-y-auto">
+                  <div className="space-y-4">
+                    {Object.entries(groupedBlockedDates).map(([monthYear, dates]) => (
+                      <div key={monthYear} className="border-b pb-3 last:border-0 last:pb-0">
+                        <h4 className="font-medium text-sm mb-2">{monthYear}</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {dates
+                            .sort((a, b) => a.getTime() - b.getTime())
+                            .map((date, index) => (
+                              <Badge 
+                                key={index}
+                                variant="secondary"
+                                className="flex items-center gap-1 pr-1"
+                              >
+                                {format(date, "d")}
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  className="h-4 w-4 p-0 text-destructive rounded-full hover:bg-destructive/10"
+                                  onClick={() => removeBlockedDate(date)}
+                                >
+                                  <X className="h-3 w-3" />
+                                  <span className="sr-only">{t("Remove", "إزالة")}</span>
+                                </Button>
+                              </Badge>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
