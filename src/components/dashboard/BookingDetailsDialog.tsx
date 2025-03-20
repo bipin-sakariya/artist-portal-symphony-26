@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { BookingRequest } from "@/lib/dashboard-data";
@@ -101,7 +102,10 @@ const BookingDetailsDialog = ({
   };
 
   const displayAmount = () => {
-    const amount = booking.budget * 1000;
+    // Generate a random value between 20,000 and 150,000
+    const minValue = 20000;
+    const maxValue = 150000;
+    const amount = Math.floor(minValue + booking.budget * (maxValue - minValue) / 15);
     return `$${amount.toLocaleString()}`;
   };
 

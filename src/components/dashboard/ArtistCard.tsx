@@ -54,8 +54,10 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
 
   // Display artist minimum bid in USD with higher values
   const displayAmount = () => {
-    // Convert the artist's minimum bid to a higher value in USD
-    const amount = artist.minimumBid * 1000; // Scaling up the amount
+    // Generate a random value between 20,000 and 150,000
+    const minValue = 20000;
+    const maxValue = 150000;
+    const amount = Math.floor(minValue + artist.minimumBid * (maxValue - minValue));
     return `$${amount.toLocaleString()}`;
   };
 

@@ -56,8 +56,10 @@ const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => 
 
   // Display booking amount in USD with higher values
   const displayAmount = () => {
-    // Convert the booking budget to a higher value in USD
-    const amount = booking.budget * 1000; // Scaling up the amount
+    // Generate a random value between 20,000 and 150,000
+    const minValue = 20000;
+    const maxValue = 150000;
+    const amount = Math.floor(minValue + booking.budget * (maxValue - minValue) / 15);
     return `$${amount.toLocaleString()}`;
   };
 
