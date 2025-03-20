@@ -213,26 +213,32 @@ const BookingForm: React.FC<BookingFormProps> = ({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="budget"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Your Budget (USD)</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                    <Input
-                      placeholder="Enter your budget"
-                      className="bg-[#232323] border-gray-700 pl-8 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-2">
+            <p className="text-orange-400 text-sm">
+              AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.
+            </p>
+            
+            <FormField
+              control={form.control}
+              name="budget"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">Your Budget (USD)</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                      <Input
+                        placeholder="Enter your budget"
+                        className="bg-[#232323] border-gray-700 pl-8 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         <FormField
