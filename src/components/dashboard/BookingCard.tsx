@@ -54,6 +54,13 @@ const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => 
     }
   };
 
+  // Display booking amount in USD with higher values
+  const displayAmount = () => {
+    // Convert the booking budget to a higher value in USD
+    const amount = booking.budget * 1000; // Scaling up the amount
+    return `$${amount.toLocaleString()}`;
+  };
+
   return (
     <>
       <div 
@@ -85,7 +92,7 @@ const BookingCard = ({ booking, onClick, onStatusChange }: BookingCardProps) => 
           
           <div className="text-right">
             <p className="text-sm font-semibold">
-              {booking.budget.toLocaleString()} {booking.currency}
+              {displayAmount()}
             </p>
             <p className="text-xs text-muted-foreground">
               {t("Booking ID: ", "رقم الحجز: ")}#{booking.id}

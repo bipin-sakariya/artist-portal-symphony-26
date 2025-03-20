@@ -100,6 +100,11 @@ const BookingDetailsDialog = ({
     toast.success(t("Booking marked as completed", "تم تحديد الحجز كمكتمل"));
   };
 
+  const displayAmount = () => {
+    const amount = booking.budget * 1000;
+    return `$${amount.toLocaleString()}`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -129,7 +134,7 @@ const BookingDetailsDialog = ({
             </div>
             <div className="text-right">
               <p className="text-lg font-semibold">
-                {booking.budget.toLocaleString()} {booking.currency}
+                {displayAmount()}
               </p>
               <Badge variant="outline" className="font-normal">
                 {t(

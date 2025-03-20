@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/hooks/use-language";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -7,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { UseFormReturn } from "react-hook-form";
 import { useState } from "react";
-import { Ban } from "lucide-react";
+import { Ban, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SettingsTabProps {
   form: UseFormReturn<any>;
@@ -17,6 +19,7 @@ interface SettingsTabProps {
 const SettingsTab = ({ form }: SettingsTabProps) => {
   const { t } = useLanguage();
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
+  const [dangerZoneOpen, setDangerZoneOpen] = useState(false);
   
   const approvalStatus = form.watch("approvalStatus");
   const isPending = approvalStatus === "pending";
@@ -183,30 +186,47 @@ const SettingsTab = ({ form }: SettingsTabProps) => {
       </Dialog>
       
       <Card>
-        <CardHeader>
-          <CardTitle className="text-destructive">{t("Danger Zone", "منطقة الخطر")}</CardTitle>
-          <CardDescription>
-            {t("Irreversible actions for this artist", "إجراءات لا رجعة فيها لهذا الفنان")}
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="space-y-4">
-          <div className="rounded-lg border border-destructive p-4">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <CardHeader className="pb-3">
+          <Collapsible
+            open={dangerZoneOpen}
+            onOpenChange={setDangerZoneOpen}
+            className="w-full"
+          >
+            <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-medium text-destructive">
-                  {t("Delete Artist", "حذف الفنان")}
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  {t("Permanently delete this artist and all associated data", "حذف هذا الفنان وجميع البيانات المرتبطة به بشكل دائم")}
-                </p>
+                <CardTitle className="text-destructive">{t("Danger Zone", "منطقة الخطر")}</CardTitle>
+                <CardDescription>
+                  {t("Irreversible actions for this artist", "إجراءات لا رجعة فيها لهذا الفنان")}
+                </CardDescription>
               </div>
-              <Button type="button" variant="destructive">
-                {t("Delete Artist", "حذف الفنان")}
-              </Button>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="w-9 p-0 hover:bg-destructive/10">
+                  <ChevronDown className={`h-4 w-4 text-destructive transition-transform ${dangerZoneOpen ? "rotate-180" : ""}`} />
+                </Button>
+              </CollapsibleTrigger>
             </div>
-          </div>
-        </CardContent>
+            
+            <CollapsibleContent className="pt-2">
+              <CardContent className="pt-2">
+                <div className="rounded-lg border border-destructive p-4">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-destructive">
+                        {t("Delete Artist", "حذف الفنان")}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {t("Permanently delete this artist and all associated data", "حذف هذا الفنان وجميع البيانات المرتبطة به بشكل دائم")}
+                      </p>
+                    </div>
+                    <Button type="button" variant="destructive">
+                      {t("Delete Artist", "حذف الفنان")}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </CardHeader>
       </Card>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/hooks/use-language";
 import { Artist } from "@/lib/dashboard-data";
 import { CheckCircle, ChevronRight, Edit, Star, XCircle } from "lucide-react";
@@ -49,6 +50,13 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
     if (onClick) {
       onClick(artist);
     }
+  };
+
+  // Display artist minimum bid in USD with higher values
+  const displayAmount = () => {
+    // Convert the artist's minimum bid to a higher value in USD
+    const amount = artist.minimumBid * 1000; // Scaling up the amount
+    return `$${amount.toLocaleString()}`;
   };
 
   return (
@@ -126,7 +134,7 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
           <div className="text-sm text-muted-foreground">
             <span>{t("Min. Budget: ", "الحد الأدنى للميزانية: ")}</span>
             <span className="font-medium text-foreground">
-              {artist.minimumBid.toLocaleString()} {artist.currency}
+              {displayAmount()}
             </span>
           </div>
           
