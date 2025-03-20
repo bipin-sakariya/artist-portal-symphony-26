@@ -163,9 +163,9 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     className: "pointer-events-auto font-gotham-book",
     classNames: {
       day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
-      day_today: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200 font-bold rounded-md transition-all duration-200",
-      day_disabled: "text-muted-foreground opacity-50 bg-red-50 dark:bg-red-950/30 dark:text-gray-400 line-through rounded-md transition-all duration-200",
-      day_range_middle: "bg-orange-50 text-orange-900 dark:bg-orange-900/20 dark:text-orange-100 rounded-none transition-all duration-200",
+      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
+      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
       day_hidden: "invisible transition-all duration-200",
     }
   };
@@ -207,7 +207,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-100 px-3 py-1 rounded-md text-sm font-gotham-book flex items-center gap-1"
+                className="bg-orange-100 text-orange-800 px-3 py-1 rounded-md text-sm font-gotham-book flex items-center gap-1"
               >
                 <ShieldAlert className="h-4 w-4" />
                 {t("Select end date", "حدد تاريخ الانتهاء")}
@@ -257,7 +257,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               </div>
               
               <motion.div 
-                className="border rounded-md p-1 bg-white dark:bg-background shadow-sm"
+                className="border rounded-md p-1 bg-white shadow-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
@@ -304,20 +304,20 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: i * 0.05 }}
                             >
-                              <Badge variant="outline" className="gap-1 font-gotham-book bg-white dark:bg-background/40 dark:text-white">
+                              <Badge variant="outline" className="gap-1 font-gotham-book bg-white">
                                 {format(date, language === "ar" ? "dd/MM/yyyy" : "MMM d, yyyy")}
                               </Badge>
                             </motion.div>
                           ))
                         ) : (
                           <>
-                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white dark:bg-background/40 dark:text-white">
+                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white">
                               {format(selectedDates[0], language === "ar" ? "dd/MM/yyyy" : "MMM d, yyyy")}
                             </Badge>
-                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white dark:bg-background/40 dark:text-white flex items-center">
+                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white flex items-center">
                               <ArrowRight className="h-3 w-3 mx-1" />
                             </Badge>
-                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white dark:bg-background/40 dark:text-white">
+                            <Badge variant="outline" className="gap-1 font-gotham-book bg-white">
                               {format(selectedDates[selectedDates.length - 1], language === "ar" ? "dd/MM/yyyy" : "MMM d, yyyy")}
                             </Badge>
                             <Badge variant="secondary" className="gap-1 font-gotham-bold">
@@ -353,7 +353,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               
               {blockedDates.length === 0 ? (
                 <motion.div 
-                  className="flex items-center justify-center h-64 border rounded-md p-6 bg-muted/30 dark:bg-muted/10"
+                  className="flex items-center justify-center h-64 border rounded-md p-6 bg-muted/30"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -380,7 +380,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 </motion.div>
               ) : (
                 <motion.div 
-                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-white dark:bg-background shadow-sm"
+                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-white shadow-sm"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
