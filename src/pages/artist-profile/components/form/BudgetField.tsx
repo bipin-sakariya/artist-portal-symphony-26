@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Info } from "lucide-react";
 import {
   FormControl,
@@ -19,6 +19,10 @@ interface BudgetFieldProps {
 }
 
 const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
+  const [showBudgetHint, setShowBudgetHint] = useState(false);
+  const minBudget = 10000;
+  const maxBudget = 20000;
+
   return (
     <FormField
       control={control}
@@ -52,9 +56,24 @@ const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
                 placeholder="Enter your budget"
                 className="bg-[#232323] border-gray-700 pl-8 text-white focus:border-orange-500 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                 {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  const value = Number(e.target.value.replace(/[^0-9]/g, ''));
+                  setShowBudgetHint(value > 0 && value < minBudget);
+                }}
+                onBlur={(e) => {
+                  field.onBlur();
+                  const value = Number(e.target.value.replace(/[^0-9]/g, ''));
+                  setShowBudgetHint(value > 0 && value < minBudget);
+                }}
               />
             </div>
           </FormControl>
+          {showBudgetHint && (
+            <div className="mt-2 text-orange-400 text-sm">
+              For an event like yours, customers typically budget between ${minBudget.toLocaleString()} and ${maxBudget.toLocaleString()} for this artist.
+            </div>
+          )}
           <FormMessage />
         </FormItem>
       )}
