@@ -52,3 +52,9 @@ export {
   ToastClose,
   ToastAction,
 } from "./toast";
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "./tooltip";
