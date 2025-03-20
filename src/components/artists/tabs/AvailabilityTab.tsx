@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
@@ -175,7 +174,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
   }, {} as Record<string, Date[]>);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-2">
       <Card>
         <CardHeader>
           <CardTitle className="font-gotham-bold">{t("Artist Availability", "توفر الفنان")}</CardTitle>
@@ -185,7 +184,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
         </CardHeader>
         
         <CardContent className="space-y-6">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap justify-between items-center gap-2">
             <div className="flex gap-2">
               <Button 
                 variant={isRangeMode ? "secondary" : "outline"} 
@@ -219,9 +218,9 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             <div className="lg:col-span-2">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
                 <h3 className="text-base font-gotham-bold flex items-center gap-2">
                   {isRangeMode ? (
                     <>

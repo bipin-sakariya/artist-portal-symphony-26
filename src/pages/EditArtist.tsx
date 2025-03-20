@@ -275,22 +275,22 @@ const EditArtist = () => {
                 <div className="flex flex-col gap-6 md:gap-8">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className={cn(
-                      "grid w-full mb-6 md:mb-8",
-                      isMobile ? "grid-cols-2 gap-2" : "grid-cols-5 max-w-2xl"
+                      "grid w-full mb-6 md:mb-8 overflow-x-auto",
+                      isMobile ? "grid-cols-5 min-w-max" : "grid-cols-5 max-w-2xl"
                     )}>
-                      <TabsTrigger value="basic" className="text-xs md:text-sm">
+                      <TabsTrigger value="basic" className="text-xs md:text-sm px-2 md:px-3">
                         {t("Basic Info", "معلومات أساسية")}
                       </TabsTrigger>
-                      <TabsTrigger value="media" className="text-xs md:text-sm">
+                      <TabsTrigger value="media" className="text-xs md:text-sm px-2 md:px-3">
                         {t("Media", "الوسائط")}
                       </TabsTrigger>
-                      <TabsTrigger value="pricing" className="text-xs md:text-sm">
+                      <TabsTrigger value="pricing" className="text-xs md:text-sm px-2 md:px-3">
                         {t("Pricing", "التسعير")}
                       </TabsTrigger>
-                      <TabsTrigger value="availability" className="text-xs md:text-sm">
+                      <TabsTrigger value="availability" className="text-xs md:text-sm px-2 md:px-3">
                         {t("Availability", "التوفر")}
                       </TabsTrigger>
-                      <TabsTrigger value="settings" className="text-xs md:text-sm">
+                      <TabsTrigger value="settings" className="text-xs md:text-sm px-2 md:px-3">
                         {t("Settings", "الإعدادات")}
                       </TabsTrigger>
                     </TabsList>
