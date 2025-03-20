@@ -1,11 +1,14 @@
-
 import { useLanguage } from "@/hooks/use-language";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { UseFormReturn } from "react-hook-form";
+import { useState } from "react";
+import { Ban } from "lucide-react";
+import { toast } from "sonner";
 
 interface SettingsTabProps {
   form: UseFormReturn<any>;
@@ -13,6 +16,16 @@ interface SettingsTabProps {
 
 const SettingsTab = ({ form }: SettingsTabProps) => {
   const { t } = useLanguage();
+  const [openRejectDialog, setOpenRejectDialog] = useState(false);
+  
+  const approvalStatus = form.watch("approvalStatus");
+  const isPending = approvalStatus === "pending";
+  
+  const handleReject = () => {
+    form.setValue("approvalStatus", "rejected");
+    setOpenRejectDialog(false);
+    toast.success("Artist has been rejected");
+  };
 
   return (
     <div className="space-y-6">
@@ -103,27 +116,42 @@ const SettingsTab = ({ form }: SettingsTabProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("Approval Status", "حالة الموافقة")}</FormLabel>
-                  <Select 
-                    value={field.value} 
-                    onValueChange={field.onChange}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("Select status", "اختر الحالة")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="approved">
-                        {t("Approved", "تمت الموافقة")}
-                      </SelectItem>
-                      <SelectItem value="pending">
-                        {t("Pending", "قيد الانتظار")}
-                      </SelectItem>
-                      <SelectItem value="rejected">
-                        {t("Rejected", "مرفوض")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1">
+                      <Select 
+                        value={field.value} 
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder={t("Select status", "اختر الحالة")} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="approved">
+                            {t("Approved", "تمت الموافقة")}
+                          </SelectItem>
+                          <SelectItem value="pending">
+                            {t("Pending", "قيد الانتظار")}
+                          </SelectItem>
+                          <SelectItem value="rejected">
+                            {t("Rejected", "مرفوض")}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    {isPending && (
+                      <Button 
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setOpenRejectDialog(true)}
+                      >
+                        <Ban className="mr-1 h-4 w-4" />
+                        {t("Reject", "رفض")}
+                      </Button>
+                    )}
+                  </div>
                   <FormDescription>
                     {t("Control whether this artist is visible on the platform", "التحكم في ما إذا كان هذا الفنان مرئيًا على المنصة")}
                   </FormDescription>
@@ -134,6 +162,25 @@ const SettingsTab = ({ form }: SettingsTabProps) => {
           </div>
         </CardContent>
       </Card>
+      
+      <Dialog open={openRejectDialog} onOpenChange={setOpenRejectDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("Reject this artist?", "رفض هذا الفنان؟")}</DialogTitle>
+            <DialogDescription>
+              {t("This will change the artist's status to rejected. They will not be visible on the platform.", "سيؤدي ذلك إلى تغيير حالة الفنان إلى مرفوض. لن يكونوا مرئيين على المنصة.")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setOpenRejectDialog(false)}>
+              {t("Cancel", "إلغاء")}
+            </Button>
+            <Button variant="destructive" onClick={handleReject}>
+              {t("Reject Artist", "رفض الفنان")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       <Card>
         <CardHeader>
