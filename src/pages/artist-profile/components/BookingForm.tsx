@@ -1,7 +1,7 @@
 
 import React from "react";
 import { format } from "date-fns";
-import { Clock, MapPin, Users, CalendarIcon } from "lucide-react";
+import { Clock, MapPin, Users, CalendarIcon, Info } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -21,6 +21,10 @@ import {
   Button,
   Textarea,
   Calendar,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { BookingFormValues } from "../hooks/useBookingForm";
@@ -61,11 +65,16 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="bg-[#232323] border-gray-700 text-white">
-                  <SelectItem value="wedding" className="text-white">Wedding</SelectItem>
-                  <SelectItem value="corporate" className="text-white">Corporate Event</SelectItem>
-                  <SelectItem value="birthday" className="text-white">Birthday Party</SelectItem>
-                  <SelectItem value="private" className="text-white">Private Gathering</SelectItem>
-                  <SelectItem value="other" className="text-white">Other</SelectItem>
+                  <SelectItem value="private" className="text-white">Private event</SelectItem>
+                  <SelectItem value="wedding" className="text-white">Weddings</SelectItem>
+                  <SelectItem value="corporate" className="text-white">Corporate events</SelectItem>
+                  <SelectItem value="festival" className="text-white">Festivals (Organized by promoters)</SelectItem>
+                  <SelectItem value="conference" className="text-white">Conferences</SelectItem>
+                  <SelectItem value="government" className="text-white">Government events</SelectItem>
+                  <SelectItem value="bar" className="text-white">Bar deals/ club deals</SelectItem>
+                  <SelectItem value="advertising" className="text-white">Advertising deals</SelectItem>
+                  <SelectItem value="appearance" className="text-white">Appearances</SelectItem>
+                  <SelectItem value="influencer" className="text-white">Influencer marketing</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -214,16 +223,24 @@ const BookingForm: React.FC<BookingFormProps> = ({
           />
 
           <div className="space-y-2">
-            <p className="text-orange-400 text-sm">
-              AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.
-            </p>
-            
             <FormField
               control={form.control}
               name="budget"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Your Budget (USD)</FormLabel>
+                  <FormLabel className="text-white flex items-center gap-2">
+                    Your Budget (USD)
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-orange-400 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-[#232323] border-gray-700 text-white max-w-xs">
+                          AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
