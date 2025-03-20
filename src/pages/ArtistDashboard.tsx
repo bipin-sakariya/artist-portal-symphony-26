@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Check, Clock, UserCog } from "lucide-react";
+import { Calendar, Check, UserCog } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -21,7 +21,7 @@ const ArtistDashboard = () => {
       <Sidebar />
       
       <div className="flex-1 flex flex-col">
-        <Header>{t("Artist Dashboard", "لوحة تحكم الفنان")}</Header>
+        <Header />
         
         <div className="flex-1 container py-6 md:py-8 space-y-6">
           <PageTransition>
