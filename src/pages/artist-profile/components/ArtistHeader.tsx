@@ -1,6 +1,7 @@
 
 import React from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
+import { Button } from "@/components/ui";
 import { artistData } from "../data";
 
 type ArtistHeaderProps = {
@@ -40,27 +41,28 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({ onBookingClick }) => {
             </div>
           </div>
           
-          <button 
+          <Button 
             onClick={onBookingClick}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-6 rounded-md text-lg font-gotham-bold flex items-center gap-2 transition-all transform hover:scale-105 group"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-md text-base font-gotham-bold flex items-center gap-2 transition-all hover:translate-y-[-2px] shadow-md"
           >
+            <Calendar className="w-4 h-4" />
             Book Now
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              width="24" 
-              height="24" 
+              width="16" 
+              height="16" 
               viewBox="0 0 24 24" 
               fill="none" 
               stroke="currentColor" 
               strokeWidth="2" 
               strokeLinecap="round" 
               strokeLinejoin="round" 
-              className="ml-1 group-hover:translate-x-1 transition-transform"
+              className="group-hover:translate-x-1 transition-transform"
             >
-              <path d="M5 12h14"></path>
               <path d="m12 5 7 7-7 7"></path>
+              <path d="M5 12h14"></path>
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
     </div>
