@@ -1,13 +1,25 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
 import { CardHeader, CardTitle, CardDescription, CardContent, Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, CalendarX, CalendarCheck, Trash2, CalendarRange, Calendar as CalendarIcon, ShieldAlert, ShieldCheck, ArrowRight } from "lucide-react";
+import { 
+  X, 
+  CalendarX, 
+  CalendarCheck, 
+  Trash2, 
+  CalendarRange, 
+  Calendar as CalendarIcon, 
+  ShieldAlert,
+  ShieldCheck,
+  ArrowRight
+} from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/components/ui/use-toast";
 
 interface AvailabilityTabProps {
   form: UseFormReturn<any>;
@@ -21,12 +33,8 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [rangeStart, setRangeStart] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
-  const [forceUpdate, setForceUpdate] = useState(0);
 
-  useEffect(() => {
-    setForceUpdate(prev => prev + 1);
-  }, [blockedDates]);
-
+  // Function to toggle between single and range selection modes
   const toggleRangeMode = () => {
     setIsRangeMode(!isRangeMode);
     setSelectedDates([]);
@@ -34,18 +42,57 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     setIsSelectingRange(false);
   };
 
+  // Handle date selection based on the mode (single or range)
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (!isRangeMode || !dates) {
       setSelectedDates(dates || []);
       return;
     }
+
+    // Range mode logic
+    if (!isSelectingRange) {
+      // First click - set the range start
+      if (dates.length > 0) {
+        const lastSelected = dates[dates.length - 1];
+        setRangeStart(lastSelected);
+        setSelectedDates([lastSelected]);
+        setIsSelectingRange(true);
+      }
+    } else {
+      // Second click - complete the range
+      if (dates.length > 0 && rangeStart) {
+        const rangeEnd = dates[dates.length - 1];
+        
+        // Create array of dates in the range
+        const range: Date[] = [];
+        let currentDate = new Date(rangeStart);
+        
+        // Ensure the range is always from earlier to later date, regardless of selection order
+        const startDate = rangeStart < rangeEnd ? rangeStart : rangeEnd;
+        const endDate = rangeStart < rangeEnd ? rangeEnd : rangeStart;
+        
+        while (currentDate <= endDate) {
+          range.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        setSelectedDates(range);
+        setIsSelectingRange(false);
+        setRangeStart(null);
+      }
+    }
   };
 
+  // Handle single date selection in range mode
   const handleSingleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     
+    // If already selecting a range
     if (isSelectingRange && rangeStart) {
+      // Create array of dates in the range
       const range: Date[] = [];
+      
+      // Ensure the range is always from earlier to later date, regardless of selection order
       const startDate = rangeStart < date ? rangeStart : date;
       const endDate = rangeStart < date ? date : rangeStart;
       
@@ -59,18 +106,21 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       setIsSelectingRange(false);
       setRangeStart(null);
     } else {
+      // First click in range selection
       setRangeStart(date);
       setSelectedDates([date]);
       setIsSelectingRange(true);
     }
   };
 
+  // Custom modifiers for the calendar
   const modifiers = {
     rangeStart: rangeStart ? [rangeStart] : [],
     isSelectingRange: isSelectingRange,
     blocked: blockedDates
   };
 
+  // Custom modifier styles
   const modifiersStyles = {
     rangeStart: {
       color: "white",
@@ -79,6 +129,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
+  // Function to check if a date is already blocked
   const isDateBlocked = (date: Date) => {
     return blockedDates.some(blockedDate => 
       blockedDate.getFullYear() === date.getFullYear() &&
@@ -87,31 +138,46 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     );
   };
 
+  // Function to block selected dates
   const blockDates = () => {
     if (selectedDates.length > 0) {
+      // Filter out dates that are already blocked
       const newBlockedDates = selectedDates.filter(date => !isDateBlocked(date));
       
       if (newBlockedDates.length === 0) {
-        setSelectedDates([]);
-        setRangeStart(null);
-        setIsSelectingRange(false);
+        toast({
+          title: t("No Changes Made", "لم يتم إجراء أي تغييرات"),
+          description: t(
+            "These dates are already blocked",
+            "هذه التواريخ محظورة بالفعل"
+          ),
+        });
         return;
       }
       
-      const newDatesToAdd = newBlockedDates.map(date => new Date(date));
-      setBlockedDates(prev => [...prev, ...newDatesToAdd]);
+      setBlockedDates(prev => [...prev, ...newBlockedDates]);
       setSelectedDates([]);
       setRangeStart(null);
       setIsSelectingRange(false);
+      
+      toast({
+        title: t("Dates Blocked", "تم حظر التواريخ"),
+        description: t(
+          `${newBlockedDates.length} date(s) have been marked as unavailable`,
+          `تم تحديد ${newBlockedDates.length} تاريخ (تواريخ) كغير متاح`
+        ),
+      });
     }
   };
 
+  // Function to clear all selected dates
   const clearSelectedDates = () => {
     setSelectedDates([]);
     setRangeStart(null);
     setIsSelectingRange(false);
   };
 
+  // Function to remove a blocked date
   const removeBlockedDate = (dateToRemove: Date) => {
     setBlockedDates(prev => 
       prev.filter(date => 
@@ -120,12 +186,30 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
         date.getDate() !== dateToRemove.getDate()
       )
     );
+    
+    toast({
+      title: t("Date Unblocked", "تم إلغاء حظر التاريخ"),
+      description: t(
+        "The selected date has been removed from your blocked dates",
+        "تم إزالة التاريخ المحدد من تواريخك المحظورة"
+      ),
+    });
   };
 
+  // Function to remove all blocked dates
   const clearAllBlockedDates = () => {
     setBlockedDates([]);
+    
+    toast({
+      title: t("All Dates Unblocked", "تم إلغاء حظر جميع التواريخ"),
+      description: t(
+        "All blocked dates have been cleared",
+        "تم مسح جميع التواريخ المحظورة"
+      ),
+    });
   };
 
+  // Group blocked dates by month for more compact display
   const groupedBlockedDates = blockedDates.reduce((acc, date) => {
     const monthYear = format(date, language === "ar" ? "MM/yyyy" : "MMMM yyyy");
     if (!acc[monthYear]) {
@@ -135,8 +219,10 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     return acc;
   }, {} as Record<string, Date[]>);
 
+  // Common calendar props
   const commonCalendarProps = {
     disabled: (date: Date) => {
+      // Disable dates that are already in the blockedDates array
       return blockedDates.some(disabledDate => 
         date.getFullYear() === disabledDate.getFullYear() &&
         date.getMonth() === disabledDate.getMonth() &&
@@ -145,12 +231,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     },
     modifiers: modifiers,
     modifiersStyles: modifiersStyles,
-    numberOfMonths: 2,
+    numberOfMonths: window.innerWidth > 768 ? 2 : 1,
     className: "pointer-events-auto font-gotham-book",
     classNames: {
       day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
       day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
-      day_disabled: "text-muted-foreground opacity-70 bg-red-100/60 dark:bg-red-950/60 line-through rounded-md transition-all duration-200",
+      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
       day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
       day_hidden: "invisible transition-all duration-200",
     }
@@ -170,18 +256,18 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <Button 
-                variant={isRangeMode ? "outline" : "default"} 
+                variant={isRangeMode ? "secondary" : "outline"} 
                 size="sm" 
-                className={`gap-1 font-gotham-book transition-all duration-200 ${!isRangeMode ? "bg-primary text-primary-foreground" : "text-foreground"}`}
+                className="gap-1 font-gotham-book transition-all duration-200"
                 onClick={toggleRangeMode}
               >
                 <CalendarIcon className="h-4 w-4" />
                 {t("Single Select", "اختيار فردي")}
               </Button>
               <Button 
-                variant={isRangeMode ? "default" : "outline"} 
+                variant={isRangeMode ? "outline" : "secondary"} 
                 size="sm" 
-                className={`gap-1 font-gotham-book transition-all duration-200 ${isRangeMode ? "bg-primary text-primary-foreground" : "text-foreground"}`}
+                className="gap-1 font-gotham-book transition-all duration-200"
                 onClick={toggleRangeMode}
               >
                 <CalendarRange className="h-4 w-4" />
@@ -243,13 +329,14 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               </div>
               
               <motion.div 
-                className="border rounded-md p-1 bg-white shadow-sm"
+                className="border rounded-md p-1 bg-white shadow-subtle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                key={`calendar-${forceUpdate}`}
+                key={`calendar-${blockedDates.length}`}
               >
                 {isRangeMode && isSelectingRange ? (
+                  // In range mode and selecting the second date
                   <Calendar 
                     mode="single"
                     selected={rangeStart}
@@ -257,6 +344,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                     {...commonCalendarProps}
                   />
                 ) : isRangeMode ? (
+                  // In range mode, selecting the first date
                   <Calendar 
                     mode="single"
                     selected={selectedDates[0]}
@@ -264,6 +352,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                     {...commonCalendarProps}
                   />
                 ) : (
+                  // In multiple selection mode
                   <Calendar 
                     mode="multiple"
                     selected={selectedDates}
@@ -373,7 +462,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
                 </motion.div>
               ) : (
                 <motion.div 
-                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-white shadow-sm"
+                  className="border rounded-md p-4 h-[500px] overflow-y-auto bg-white shadow-subtle"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
