@@ -11,6 +11,7 @@ import Artists from "./pages/Artists";
 import EditArtist from "./pages/EditArtist";
 import Bookings from "./pages/Bookings";
 import Analytics from "./pages/Analytics";
+import ArtistDashboard from "./pages/ArtistDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/artists/edit/:id" element={<EditArtist />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/artist-dashboard" element={<ArtistDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -12,7 +12,8 @@ import {
   Moon,
   Sun,
   Menu,
-  X
+  X,
+  Palette
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -167,7 +168,14 @@ const Sidebar = ({ className }: SidebarProps) => {
             <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
           </div>
           
-          {/* Language toggle removed */}
+          {/* Artist Dashboard Link */}
+          <Link 
+            to="/artist-dashboard" 
+            className="flex w-full items-center gap-2 px-3 py-2 text-sm font-gotham-book rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+          >
+            <Palette className="h-4 w-4" />
+            <span>{language === "ar" ? "لوحة تحكم الفنان" : "Artist Dashboard"}</span>
+          </Link>
 
           <button className="flex w-full items-center gap-2 px-3 py-2 text-sm font-gotham-book rounded-lg text-destructive hover:bg-destructive/10 transition-colors">
             <LogOut className="h-4 w-4" />
