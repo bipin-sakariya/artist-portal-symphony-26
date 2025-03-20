@@ -1,3 +1,4 @@
+
 // Mock data for the dashboard
 
 export type Artist = {
@@ -23,9 +24,6 @@ export type Artist = {
   isVerified: boolean;
   isInternational: boolean;
   isPromoted: boolean;
-  hasUpdateRequest?: boolean;
-  updateRequestDate?: string;
-  isNewArtist?: boolean;
 };
 
 export type BookingRequest = {
@@ -56,7 +54,7 @@ export type AnalyticsDashboard = {
   rejectedBookingRequests: number;
   totalArtists: number;
   pendingArtistApprovals: number;
-  activeUsers: number;
+  activeUsers: number; // Added activeUsers property
   totalRevenue: number;
   currency: string;
   topArtists: Array<{
@@ -99,9 +97,7 @@ export const artists: Artist[] = [
     joinedAt: "2023-06-15",
     isVerified: true,
     isInternational: false,
-    isPromoted: true,
-    hasUpdateRequest: true,
-    updateRequestDate: "2023-11-15"
+    isPromoted: true
   },
   {
     id: "2",
@@ -145,8 +141,7 @@ export const artists: Artist[] = [
     joinedAt: "2023-09-05",
     isVerified: false,
     isInternational: false,
-    isPromoted: false,
-    isNewArtist: true
+    isPromoted: false
   },
   {
     id: "4",
@@ -192,79 +187,6 @@ export const artists: Artist[] = [
     isVerified: false,
     isInternational: false,
     isPromoted: false
-  },
-  {
-    id: "6",
-    name: "Amr Diab",
-    nameAr: "عمرو دياب",
-    genre: "Arabic Pop",
-    genreAr: "بوب عربي",
-    location: "Cairo, Egypt",
-    locationAr: "القاهرة، مصر",
-    profileImage: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    bio: "Legendary Arabic pop star with numerous chart-topping hits across the Middle East.",
-    bioAr: "نجم البوب العربي الأسطوري مع العديد من الأغاني التي تصدرت المخططات في جميع أنحاء الشرق الأوسط.",
-    approvalStatus: "pending",
-    youtubeLinks: ["https://youtube.com/watch?v=123"],
-    instagramLink: "https://instagram.com/amrdiab",
-    spotifyLink: "https://open.spotify.com/artist/456",
-    minimumBid: 30000,
-    currency: "USD",
-    joinedAt: "2023-10-25",
-    isVerified: false,
-    isInternational: true,
-    isPromoted: false,
-    isNewArtist: true
-  },
-  {
-    id: "7",
-    name: "Adonis",
-    nameAr: "أدونيس",
-    genre: "Alternative Rock",
-    genreAr: "روك بديل",
-    location: "Beirut, Lebanon",
-    locationAr: "بيروت، لبنان",
-    profileImage: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    coverImage: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    bio: "Progressive Lebanese rock band known for their poetic Arabic lyrics and experimental sound.",
-    bioAr: "فرقة روك لبنانية تقدمية معروفة بكلماتها العربية الشعرية وصوتها التجريبي.",
-    approvalStatus: "approved",
-    youtubeLinks: ["https://youtube.com/watch?v=789"],
-    instagramLink: "https://instagram.com/adonisband",
-    soundcloudLink: "https://soundcloud.com/adonisband",
-    minimumBid: 8000,
-    currency: "USD",
-    joinedAt: "2023-08-15",
-    isVerified: true,
-    isInternational: true,
-    isPromoted: false,
-    hasUpdateRequest: true,
-    updateRequestDate: "2023-11-10"
-  },
-  {
-    id: "8",
-    name: "George Wassouf",
-    nameAr: "جورج وسوف",
-    genre: "Classic Arabic",
-    genreAr: "عربي كلاسيكي",
-    location: "Damascus, Syria",
-    locationAr: "دمشق، سوريا",
-    profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    coverImage: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    bio: "Iconic Arabic vocalist with a distinctive voice that has defined a generation of Arabic music.",
-    bioAr: "مغني عربي أيقوني بصوت مميز حدد جيلًا من الموسيقى العربية.",
-    approvalStatus: "pending",
-    youtubeLinks: ["https://youtube.com/watch?v=321"],
-    minimumBid: 25000,
-    currency: "USD",
-    joinedAt: "2023-09-30",
-    isVerified: false,
-    isInternational: true,
-    isPromoted: false,
-    hasUpdateRequest: true,
-    updateRequestDate: "2023-11-20",
-    isNewArtist: false
   }
 ];
 
@@ -370,9 +292,9 @@ export const analyticsDashboard: AnalyticsDashboard = {
   pendingBookingRequests: 32,
   confirmedBookingRequests: 48,
   rejectedBookingRequests: 7,
-  totalArtists: 28,
-  pendingArtistApprovals: 4,
-  activeUsers: 156,
+  totalArtists: 24,
+  pendingArtistApprovals: 5,
+  activeUsers: 156, // Added activeUsers value
   totalRevenue: 358000,
   currency: "USD",
   topArtists: [
@@ -425,4 +347,3 @@ export const analyticsDashboard: AnalyticsDashboard = {
     { date: "2023-11", count: 15 }
   ]
 };
-

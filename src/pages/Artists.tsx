@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -11,7 +12,6 @@ import { Artist, artists as mockArtists } from "@/lib/dashboard-data";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 
 const Artists = () => {
   const { t } = useLanguage();
@@ -24,9 +24,6 @@ const Artists = () => {
   const [filteredArtists, setFilteredArtists] = useState<Artist[]>(mockArtists);
   const [searchValue, setSearchValue] = useState("");
   const [activeFilters, setActiveFilters] = useState<any>({});
-  
-  // Count pending artists
-  const pendingCount = artists.filter(a => a.approvalStatus === "pending").length;
   
   useEffect(() => {
     // Set document title
@@ -78,13 +75,6 @@ const Artists = () => {
           (activeFilters.promotion.includes("regular") && !artist.isPromoted)
         );
       }
-      
-      if (activeFilters.requestType?.length) {
-        filtered = filtered.filter(artist => 
-          (activeFilters.requestType.includes("new") && artist.isNewArtist) ||
-          (activeFilters.requestType.includes("update") && artist.hasUpdateRequest)
-        );
-      }
     }
     
     setFilteredArtists(filtered);
@@ -117,8 +107,6 @@ const Artists = () => {
         { value: "oud master", label: "Oud Master", labelAr: "أستاذ العود" },
         { value: "electronic", label: "Electronic", labelAr: "إلكترونية" },
         { value: "folk band", label: "Folk Band", labelAr: "فرقة فولك" },
-        { value: "alternative rock", label: "Alternative Rock", labelAr: "روك بديل" },
-        { value: "classic arabic", label: "Classic Arabic", labelAr: "عربي كلاسيكي" },
       ]
     },
     international: {
@@ -135,14 +123,6 @@ const Artists = () => {
       options: [
         { value: "promoted", label: "Promoted", labelAr: "مروج" },
         { value: "regular", label: "Regular", labelAr: "عادي" },
-      ]
-    },
-    requestType: {
-      label: "Request Type",
-      labelAr: "نوع الطلب",
-      options: [
-        { value: "new", label: "New Artist", labelAr: "فنان جديد" },
-        { value: "update", label: "Profile Update", labelAr: "تحديث الملف" },
       ]
     }
   };
@@ -165,11 +145,7 @@ const Artists = () => {
     <div className="min-h-screen flex w-full">
       <Sidebar />
       
-      <div className="flex-1 transition-all duration-300" 
-        style={{
-          marginLeft: localStorage.getItem('sidebarCollapsed') === 'true' ? '4rem' : '18rem',
-          maxWidth: localStorage.getItem('sidebarCollapsed') === 'true' ? 'calc(100% - 4rem)' : 'calc(100% - 18rem)'
-        }}>
+      <div className="flex-1 ml-72 max-w-[calc(100%-18rem)]">
         <Header />
         
         <PageTransition>
@@ -205,24 +181,12 @@ const Artists = () => {
               onValueChange={handleTabChange}
               className="mb-6"
             >
-              <TabsList className="mb-2">
+              <TabsList>
                 <TabsTrigger value="all">{t("All Artists", "")}</TabsTrigger>
                 <TabsTrigger value="approved">{t("Approved", "")}</TabsTrigger>
-                <TabsTrigger value="pending" className="relative">
-                  {t("Pending", "")}
-                  {pendingCount > 0 && (
-                    <Badge className="ml-2 bg-purple-500">{pendingCount}</Badge>
-                  )}
-                </TabsTrigger>
+                <TabsTrigger value="pending">{t("Pending", "")}</TabsTrigger>
                 <TabsTrigger value="rejected">{t("Rejected", "")}</TabsTrigger>
               </TabsList>
-              
-              <div className="py-1 px-2 mb-4 bg-muted/50 rounded-md text-xs text-muted-foreground">
-                {activeTab === "all" && t("Showing all artists regardless of status", "")}
-                {activeTab === "approved" && t("Showing only approved artists", "")}
-                {activeTab === "pending" && t("Showing artists awaiting approval (new artists and profile updates)", "")}
-                {activeTab === "rejected" && t("Showing rejected artist applications", "")}
-              </div>
             </Tabs>
             
             {filteredArtists.length === 0 ? (
