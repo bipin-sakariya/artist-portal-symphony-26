@@ -227,13 +227,13 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 <FormItem>
                   <FormLabel className="text-white flex items-center gap-2">
                     Your Budget (USD)
-                    <TooltipProvider>
+                    <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="h-4 w-4 text-orange-400 cursor-help" />
                         </TooltipTrigger>
-                        <TooltipContent className="bg-[#232323] border-gray-700 text-white max-w-xs">
-                          AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.
+                        <TooltipContent side="top" className="bg-[#232323] border-gray-700 text-white max-w-xs">
+                          <p>AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
