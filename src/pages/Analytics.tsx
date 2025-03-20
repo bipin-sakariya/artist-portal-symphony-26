@@ -9,7 +9,6 @@ import {
   AreaChart, 
   BarChart3, 
   Calendar, 
-  DollarSign, 
   Music, 
   Percent, 
   TicketCheck, 
@@ -71,34 +70,23 @@ const Analytics = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               <StatCard 
                 title={t("Total Booking Requests", "إجمالي طلبات الحجز")}
                 value={analyticsDashboard.totalBookingRequests}
                 icon={TicketCheck}
-                description={t("since last month", "منذ الشهر الماضي")}
               />
               
               <StatCard 
                 title={t("Total Artists", "إجمالي الفنانين")}
                 value={analyticsDashboard.totalArtists}
                 icon={Music}
-                description={t("since last month", "منذ الشهر الماضي")}
               />
               
               <StatCard 
                 title={t("Confirmation Rate", "معدل التأكيد")}
                 value={`${Math.round((analyticsDashboard.confirmedBookingRequests / analyticsDashboard.totalBookingRequests) * 100)}%`}
                 icon={Percent}
-                description={t("since last month", "منذ الشهر الماضي")}
-              />
-              
-              <StatCard 
-                title={t("Total Revenue", "إجمالي الإيرادات")}
-                value={`${analyticsDashboard.totalRevenue.toLocaleString()} ${analyticsDashboard.currency}`}
-                icon={DollarSign}
-                description={t("since last month", "منذ الشهر الماضي")}
-                valueClassName="text-primary"
               />
             </div>
             
