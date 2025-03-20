@@ -33,7 +33,12 @@ const BookingTrendsChart = ({ data }: BookingTrendsChartProps) => {
       </CardHeader>
       <CardContent>
         <div className="h-80 w-full">
-          <ChartContainer>
+          <ChartContainer config={{
+            count: {
+              label: t("Booking Requests", "طلبات الحجز"),
+              color: "hsl(var(--primary))"
+            }
+          }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data}

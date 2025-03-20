@@ -35,7 +35,16 @@ const TopArtistsChart = ({ data }: TopArtistsChartProps) => {
       </CardHeader>
       <CardContent>
         <div className="h-96 w-full">
-          <ChartContainer>
+          <ChartContainer config={{
+            bookings: {
+              label: t("Bookings", "الحجوزات"),
+              color: "hsl(var(--primary))"
+            },
+            revenue: {
+              label: t("Revenue (USD)", "الإيرادات (دولار أمريكي)"),
+              color: "#10b981"
+            }
+          }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data}

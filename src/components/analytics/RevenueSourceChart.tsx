@@ -28,7 +28,11 @@ const RevenueSourceChart = () => {
       </CardHeader>
       <CardContent>
         <div className="h-40">
-          <ChartContainer>
+          <ChartContainer config={{
+            revenue: {
+              label: t("Revenue Sources", "مصادر الإيرادات")
+            }
+          }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie

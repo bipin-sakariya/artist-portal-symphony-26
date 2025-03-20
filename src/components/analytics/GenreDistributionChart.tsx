@@ -34,7 +34,11 @@ const GenreDistributionChart = ({ data }: GenreDistributionChartProps) => {
       </CardHeader>
       <CardContent>
         <div className="h-80 w-full">
-          <ChartContainer>
+          <ChartContainer config={{
+            genre: {
+              label: t("Genre Distribution", "توزيع الأنواع")
+            }
+          }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
