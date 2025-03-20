@@ -84,6 +84,36 @@ const ArtistCalendarTab = () => {
     }
   };
 
+  // Handle single date selection in range mode
+  const handleSingleDateSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
+    // If already selecting a range
+    if (isSelectingRange && rangeStart) {
+      // Create array of dates in the range
+      const range: Date[] = [];
+      
+      // Ensure the range is always from earlier to later date, regardless of selection order
+      const startDate = rangeStart < date ? rangeStart : date;
+      const endDate = rangeStart < date ? date : rangeStart;
+      
+      let currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        range.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      setSelectedDates(range);
+      setIsSelectingRange(false);
+      setRangeStart(null);
+    } else {
+      // First click in range selection
+      setRangeStart(date);
+      setSelectedDates([date]);
+      setIsSelectingRange(true);
+    }
+  };
+
   // Custom modifiers for the calendar
   const modifiers = {
     rangeStart: rangeStart ? [rangeStart] : [],
@@ -190,6 +220,29 @@ const ArtistCalendarTab = () => {
     return acc;
   }, {} as Record<string, Date[]>);
 
+  // Common calendar props
+  const commonCalendarProps = {
+    disabled: (date: Date) => {
+      // Disable dates that are already in the blockedDates array
+      return blockedDates.some(disabledDate => 
+        date.getFullYear() === disabledDate.getFullYear() &&
+        date.getMonth() === disabledDate.getMonth() &&
+        date.getDate() === disabledDate.getDate()
+      );
+    },
+    modifiers: modifiers,
+    modifiersStyles: modifiersStyles,
+    className: "pointer-events-auto font-gotham-book",
+    numberOfMonths: window.innerWidth > 768 ? 2 : 1,
+    classNames: {
+      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
+      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
+      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
+      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
+      day_hidden: "invisible transition-all duration-200",
+    }
+  };
+
   return (
     <PageTransition>
       <div className="space-y-6">
@@ -285,30 +338,31 @@ const ArtistCalendarTab = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Calendar
-                    mode={isRangeMode && isSelectingRange ? "single" : "multiple"}
-                    selected={selectedDates}
-                    onSelect={handleDateSelect}
-                    disabled={(date) => {
-                      // Disable dates that are already in the blockedDates array
-                      return blockedDates.some(disabledDate => 
-                        date.getFullYear() === disabledDate.getFullYear() &&
-                        date.getMonth() === disabledDate.getMonth() &&
-                        date.getDate() === disabledDate.getDate()
-                      );
-                    }}
-                    modifiers={modifiers}
-                    modifiersStyles={modifiersStyles}
-                    className="pointer-events-auto font-gotham-book"
-                    numberOfMonths={window.innerWidth > 768 ? 2 : 1}
-                    classNames={{
-                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground rounded-md transition-all duration-200",
-                      day_today: "bg-orange-100 text-orange-800 font-bold rounded-md transition-all duration-200",
-                      day_disabled: "text-muted-foreground opacity-50 bg-red-50 line-through rounded-md transition-all duration-200",
-                      day_range_middle: "bg-orange-50 text-orange-900 rounded-none transition-all duration-200",
-                      day_hidden: "invisible transition-all duration-200",
-                    }}
-                  />
+                  {isRangeMode && isSelectingRange ? (
+                    // In range mode and selecting the second date
+                    <Calendar 
+                      mode="single"
+                      selected={rangeStart}
+                      onSelect={handleSingleDateSelect}
+                      {...commonCalendarProps}
+                    />
+                  ) : isRangeMode ? (
+                    // In range mode, selecting the first date
+                    <Calendar 
+                      mode="single"
+                      selected={selectedDates[0]}
+                      onSelect={handleSingleDateSelect}
+                      {...commonCalendarProps}
+                    />
+                  ) : (
+                    // In multiple selection mode
+                    <Calendar 
+                      mode="multiple"
+                      selected={selectedDates}
+                      onSelect={handleDateSelect}
+                      {...commonCalendarProps}
+                    />
+                  )}
                 </motion.div>
                 <AnimatePresence>
                   {selectedDates.length > 0 && (
