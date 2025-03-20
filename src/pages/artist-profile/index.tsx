@@ -64,7 +64,7 @@ const ArtistProfile: React.FC = () => {
       </div>
 
       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-        <DialogContent className="bg-[#1A1A1A] border-gray-800 text-white max-w-xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-[#1A1A1A] border-gray-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-gotham-bold">Book Sarah Johnson</DialogTitle>
             <DialogDescription className="text-gray-400">

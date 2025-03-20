@@ -30,14 +30,14 @@ const BudgetField: React.FC<BudgetFieldProps> = ({ control }) => {
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="inline-flex relative">
+                  <div className="inline-flex">
                     <Info className="h-4 w-4 text-orange-400 cursor-help" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
                   side="top" 
                   align="start" 
-                  className="bg-[#232323] border-gray-700 text-white max-w-xs z-50"
+                  className="bg-[#232323] border-gray-700 text-white max-w-[280px] z-50"
                   sideOffset={5}
                 >
                   <p className="text-sm">AMP will provide the necessary Tech & Hospitality requirements for the artist to perform at your event, and this will be included as part of the budget.</p>
