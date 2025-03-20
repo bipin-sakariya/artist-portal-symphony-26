@@ -32,7 +32,6 @@ import { Clock, MapPin, Music, Users, Calendar as CalendarIcon, Instagram, Exter
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-// Sample artist data
 const artistData = {
   id: "1",
   name: "Sarah Johnson",
@@ -97,7 +96,6 @@ const artistData = {
   ],
 };
 
-// Form schema
 const formSchema = z.object({
   eventType: z.string({
     required_error: "Please select an event type.",
@@ -145,11 +143,9 @@ const ArtistProfile = () => {
       description: "We'll contact you within 24 hours to confirm your booking.",
     });
     setIsBookingOpen(false);
-    // In a real app, this would send data to an API
     setTimeout(() => navigate("/dashboard"), 2000);
   }
 
-  // Date disabling function
   const isDateUnavailable = (date: Date) => {
     return artistData.unavailableDates.some(
       (unavailableDate) =>
@@ -161,7 +157,6 @@ const ArtistProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
-      {/* Hero Section */}
       <div
         className="h-[60vh] bg-cover bg-center relative"
         style={{ backgroundImage: `url(${artistData.imageUrl})` }}
@@ -221,22 +216,17 @@ const ArtistProfile = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left Column - Artist Info */}
           <div className="lg:col-span-2 space-y-16">
-            {/* Bio */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">About the Artist</h2>
               <p className="text-gray-300 font-gotham-book leading-relaxed text-lg">{artistData.bio}</p>
             </div>
 
-            {/* Media Players */}
             <div className="space-y-8 animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Listen & Watch</h2>
               
-              {/* Spotify Player */}
               <div className="space-y-4">
                 <h3 className="text-xl font-gotham-book text-orange-400 flex items-center gap-2">
                   <Music size={20} /> Spotify
@@ -254,7 +244,6 @@ const ArtistProfile = () => {
                 </div>
               </div>
               
-              {/* YouTube Player */}
               <div className="space-y-4">
                 <h3 className="text-xl font-gotham-book text-orange-400 flex items-center gap-2">
                   <ExternalLink size={20} /> YouTube
@@ -274,7 +263,6 @@ const ArtistProfile = () => {
               </div>
             </div>
 
-            {/* Tour Dates */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Upcoming Tour Dates</h2>
               
@@ -301,7 +289,6 @@ const ArtistProfile = () => {
               </div>
             </div>
 
-            {/* Experience */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Experience</h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -316,7 +303,6 @@ const ArtistProfile = () => {
               </ul>
             </div>
 
-            {/* Services */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Services</h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -331,7 +317,6 @@ const ArtistProfile = () => {
               </ul>
             </div>
 
-            {/* Gallery */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Gallery</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -345,7 +330,6 @@ const ArtistProfile = () => {
               </div>
             </div>
 
-            {/* Testimonials */}
             <div className="animate-fade-in">
               <h2 className="text-3xl font-gotham-bold mb-6 border-b border-orange-500/30 pb-2">Testimonials</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -364,10 +348,8 @@ const ArtistProfile = () => {
             </div>
           </div>
 
-          {/* Right Column - Contact & Social */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-8">
-              {/* Book Artist */}
               <Card className="bg-[#181818] border-gray-800 overflow-hidden animate-fade-in">
                 <div className="h-2 bg-orange-500"></div>
                 <CardContent className="p-6 space-y-6">
@@ -384,7 +366,6 @@ const ArtistProfile = () => {
                 </CardContent>
               </Card>
 
-              {/* Social Links */}
               <Card className="bg-[#181818] border-gray-800 animate-fade-in">
                 <CardContent className="p-6 space-y-6">
                   <h2 className="text-2xl font-gotham-bold text-white">Follow Sarah</h2>
@@ -414,15 +395,11 @@ const ArtistProfile = () => {
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Contact Information */}
-              
             </div>
           </div>
         </div>
       </div>
       
-      {/* Footer */}
       <footer className="bg-[#0a0a0a] py-12 mt-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
@@ -452,7 +429,6 @@ const ArtistProfile = () => {
         </div>
       </footer>
       
-      {/* Floating Book Now Button */}
       <div className="fixed bottom-8 right-8 md:hidden z-40">
         <Button 
           onClick={() => setIsBookingOpen(true)}
@@ -465,7 +441,6 @@ const ArtistProfile = () => {
   );
 };
 
-// Extracted Booking Form Component
 const BookingForm = ({ 
   form, 
   onSubmit, 
@@ -482,7 +457,6 @@ const BookingForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        {/* Event Type */}
         <FormField
           control={form.control}
           name="eventType"
@@ -511,7 +485,6 @@ const BookingForm = ({
           )}
         />
 
-        {/* Event Date - Dropdown Calendar */}
         <FormField
           control={form.control}
           name="eventDate"
@@ -548,9 +521,6 @@ const BookingForm = ({
                     disabled={isDateUnavailable}
                     className="bg-[#232323] text-white"
                     classNames={{
-                      day_selected: "bg-orange-500 text-white hover:bg-orange-600",
-                      day_today: "bg-orange-100/20 text-orange-600 font-bold",
-                      day_disabled: "text-red-300 bg-red-500/20 line-through hover:bg-red-500/30",
                       head_cell: "text-orange-400",
                       nav_button: "text-white hover:bg-gray-700",
                     }}
@@ -567,7 +537,6 @@ const BookingForm = ({
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Attendees */}
           <FormField
             control={form.control}
             name="attendees"
@@ -589,7 +558,6 @@ const BookingForm = ({
             )}
           />
 
-          {/* Duration */}
           <FormField
             control={form.control}
             name="duration"
@@ -623,7 +591,6 @@ const BookingForm = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Location */}
           <FormField
             control={form.control}
             name="location"
@@ -658,7 +625,6 @@ const BookingForm = ({
             )}
           />
 
-          {/* Budget */}
           <FormField
             control={form.control}
             name="budget"
@@ -681,7 +647,6 @@ const BookingForm = ({
           />
         </div>
 
-        {/* Additional Info - Smaller textarea */}
         <FormField
           control={form.control}
           name="additionalInfo"
@@ -700,7 +665,6 @@ const BookingForm = ({
           )}
         />
 
-        {/* Submit Button */}
         <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 py-4">
           Submit Booking Request
         </Button>
@@ -710,3 +674,7 @@ const BookingForm = ({
 };
 
 export default ArtistProfile;
+
+
+
+
