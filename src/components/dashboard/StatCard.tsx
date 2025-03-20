@@ -30,7 +30,7 @@ const StatCard = ({
         <div className="h-8 w-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
           <Icon className="h-4 w-4" />
         </div>
-        <h3 className="text-xs font-medium text-slate-600 dark:text-slate-300 font-display">{title}</h3>
+        <h3 className="text-xs font-medium text-slate-600 dark:text-slate-300 font-display text-center w-full mr-8">{title}</h3>
       </div>
       
       <div className="flex-1 flex flex-col justify-center items-center">
