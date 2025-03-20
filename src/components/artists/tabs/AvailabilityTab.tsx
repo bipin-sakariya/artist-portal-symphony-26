@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Calendar } from "@/components/ui/calendar";
@@ -35,12 +34,10 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
   const [isSelectingRange, setIsSelectingRange] = useState(false);
   const [key, setKey] = useState(Date.now()); // Force re-render key
 
-  // Force calendar to re-render when blockedDates change
   useEffect(() => {
     setKey(Date.now());
   }, [blockedDates.length]);
 
-  // Function to toggle between single and range selection modes
   const toggleRangeMode = () => {
     setIsRangeMode(!isRangeMode);
     setSelectedDates([]);
@@ -48,16 +45,13 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     setIsSelectingRange(false);
   };
 
-  // Handle date selection based on the mode (single or range)
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (!isRangeMode || !dates) {
       setSelectedDates(dates || []);
       return;
     }
 
-    // Range mode logic
     if (!isSelectingRange) {
-      // First click - set the range start
       if (dates.length > 0) {
         const lastSelected = dates[dates.length - 1];
         setRangeStart(lastSelected);
@@ -65,15 +59,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
         setIsSelectingRange(true);
       }
     } else {
-      // Second click - complete the range
       if (dates.length > 0 && rangeStart) {
         const rangeEnd = dates[dates.length - 1];
         
-        // Create array of dates in the range
         const range: Date[] = [];
         let currentDate = new Date(rangeStart);
         
-        // Ensure the range is always from earlier to later date, regardless of selection order
         const startDate = rangeStart < rangeEnd ? rangeStart : rangeEnd;
         const endDate = rangeStart < rangeEnd ? rangeEnd : rangeStart;
         
@@ -89,16 +80,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
-  // Handle single date selection in range mode
   const handleSingleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // If already selecting a range
     if (isSelectingRange && rangeStart) {
-      // Create array of dates in the range
       const range: Date[] = [];
       
-      // Ensure the range is always from earlier to later date, regardless of selection order
       const startDate = rangeStart < date ? rangeStart : date;
       const endDate = rangeStart < date ? date : rangeStart;
       
@@ -112,14 +99,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
       setIsSelectingRange(false);
       setRangeStart(null);
     } else {
-      // First click in range selection
       setRangeStart(date);
       setSelectedDates([date]);
       setIsSelectingRange(true);
     }
   };
 
-  // Function to check if a date is already blocked
   const isDateBlocked = (date: Date) => {
     return blockedDates.some(blockedDate => 
       blockedDate.getFullYear() === date.getFullYear() &&
@@ -128,10 +113,8 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     );
   };
 
-  // Function to block selected dates
   const blockDates = () => {
     if (selectedDates.length > 0) {
-      // Filter out dates that are already blocked
       const newBlockedDates = selectedDates.filter(date => !isDateBlocked(date));
       
       if (newBlockedDates.length === 0) {
@@ -151,14 +134,12 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     }
   };
 
-  // Function to clear all selected dates
   const clearSelectedDates = () => {
     setSelectedDates([]);
     setRangeStart(null);
     setIsSelectingRange(false);
   };
 
-  // Function to remove a blocked date
   const removeBlockedDate = (dateToRemove: Date) => {
     setBlockedDates(prev => 
       prev.filter(date => 
@@ -174,7 +155,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     ));
   };
 
-  // Function to remove all blocked dates
   const clearAllBlockedDates = () => {
     setBlockedDates([]);
     
@@ -184,7 +164,6 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
     ));
   };
 
-  // Group blocked dates by month for more compact display
   const groupedBlockedDates = blockedDates.reduce((acc, date) => {
     const monthYear = format(date, language === "ar" ? "MM/yyyy" : "MMMM yyyy");
     if (!acc[monthYear]) {
@@ -281,7 +260,7 @@ const AvailabilityTab = ({ form, blockedDates, setBlockedDates }: AvailabilityTa
               </div>
               
               <motion.div 
-                className="border rounded-md p-1 bg-white shadow-subtle"
+                className="border rounded-md p-1 bg-black/90 dark:bg-black shadow-subtle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
