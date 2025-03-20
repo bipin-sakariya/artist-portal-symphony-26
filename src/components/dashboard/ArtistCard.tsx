@@ -57,7 +57,9 @@ const ArtistCard = ({ artist, onClick }: ArtistCardProps) => {
     // Generate a random value between 20,000 and 150,000
     const minValue = 20000;
     const maxValue = 150000;
-    const amount = Math.floor(minValue + artist.minimumBid * (maxValue - minValue));
+    // Scale the artist's minimum bid to be between minValue and maxValue
+    // artist.minimumBid is typically between 0-15, so we divide the range
+    const amount = Math.floor(minValue + (artist.minimumBid / 15) * (maxValue - minValue));
     return `$${amount.toLocaleString()}`;
   };
 
